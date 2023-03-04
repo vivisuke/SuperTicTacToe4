@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=2 format=3 uid="uid://ddnaldrnxjkkx"]
+
+[ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
 
 [node name="MainScene" type="Node2D"]
 
@@ -12,3 +14,4 @@ layout_mode = 0
 offset_right = 500.0
 offset_bottom = 50.0
 color = Color(0.180392, 0.309804, 0.309804, 1)
+script = ExtResource("1_l3eue")
