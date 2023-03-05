@@ -12,6 +12,7 @@ func _ready():
 	print("(0, 0) = ", $Board/TileMapLocal.get_cell_source_id (0, Vector2i(0, 0)))
 	print("(3, 0) = ", $Board/TileMapLocal.get_cell_source_id (0, Vector2i(3, 0)))
 	print("(4, 1) = ", $Board/TileMapLocal.get_cell_source_id (0, Vector2i(4, 1)))
+	$Board/TileMapGlobal.set_cell(0, Vector2i(1, 1), 0, Vector2i(0, 0))
 	pass # Replace with function body.
 
 

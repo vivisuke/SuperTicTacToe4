@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=20 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_nwkcl"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://bke4ga7k7lq6i" path="res://images/pink.png" id="4_li4sm"]
 [ext_resource type="Texture2D" uid="uid://c21l38manmh06" path="res://images/circle_black.png" id="5_u0aoc"]
 [ext_resource type="Texture2D" uid="uid://os2kymwxpo7f" path="res://images/close_black.png" id="6_x73yt"]
+[ext_resource type="Texture2D" uid="uid://bhfxc41nee0t4" path="res://images/big_circle_black.png" id="8_h36eu"]
+[ext_resource type="Texture2D" uid="uid://cb1fxs2wp5co0" path="res://images/big_close_black.png" id="9_ju4x0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
 texture = ExtResource("3_twduk")
@@ -40,6 +42,21 @@ texture_region_size = Vector2i(51, 51)
 tile_size = Vector2i(51, 51)
 sources/0 = SubResource("TileSetAtlasSource_aipxp")
 sources/1 = SubResource("TileSetAtlasSource_qwv0h")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_idxt5"]
+texture = ExtResource("8_h36eu")
+texture_region_size = Vector2i(153, 153)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yk4th"]
+texture = ExtResource("9_ju4x0")
+texture_region_size = Vector2i(153, 153)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_blrjq"]
+tile_size = Vector2i(153, 153)
+sources/0 = SubResource("TileSetAtlasSource_idxt5")
+sources/1 = SubResource("TileSetAtlasSource_yk4th")
 
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_nwkcl")
@@ -100,5 +117,12 @@ position = Vector2(20, 20)
 tile_set = SubResource("TileSet_sex7n")
 format = 2
 layer_0/tile_data = PackedInt32Array(3, 0, 0, 65540, 1, 0)
+
+[node name="TileMapGlobal" type="TileMap" parent="Board"]
+position = Vector2(20, 20)
+tile_set = SubResource("TileSet_blrjq")
+cell_quadrant_size = 3
+format = 2
+layer_0/tile_data = PackedInt32Array(1, 0, 0, 131074, 1, 0)
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
