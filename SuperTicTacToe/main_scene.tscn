@@ -125,4 +125,13 @@ cell_quadrant_size = 3
 format = 2
 layer_0/tile_data = PackedInt32Array(1, 0, 0, 131074, 1, 0)
 
+[node name="MessLabel" type="Label" parent="."]
+offset_left = 18.0
+offset_top = 719.0
+offset_right = 85.0
+offset_bottom = 745.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Message"
+
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
