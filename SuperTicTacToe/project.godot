@@ -13,7 +13,7 @@ config_version=5
 config/name="SuperTicTacToe"
 run/main_scene="res://main_scene.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://images/tic-tac-toe.png"
 
 [display]
 

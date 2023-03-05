@@ -1,8 +1,35 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=12 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_nwkcl"]
 [ext_resource type="Script" path="res://scripts/Grid.gd" id="3_fq3ta"]
+[ext_resource type="Texture2D" uid="uid://8psfxlmyf6od" path="res://images/white153x153.png" id="3_twduk"]
+[ext_resource type="Texture2D" uid="uid://c21l38manmh06" path="res://images/circle_black.png" id="5_u0aoc"]
+[ext_resource type="Texture2D" uid="uid://os2kymwxpo7f" path="res://images/close_black.png" id="6_x73yt"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
+texture = ExtResource("3_twduk")
+texture_region_size = Vector2i(153, 153)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_gt2cf"]
+tile_size = Vector2i(153, 153)
+sources/0 = SubResource("TileSetAtlasSource_30j05")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aipxp"]
+texture = ExtResource("5_u0aoc")
+texture_region_size = Vector2i(51, 51)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qwv0h"]
+texture = ExtResource("6_x73yt")
+texture_region_size = Vector2i(51, 51)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_sex7n"]
+tile_size = Vector2i(51, 51)
+sources/0 = SubResource("TileSetAtlasSource_aipxp")
+sources/1 = SubResource("TileSetAtlasSource_qwv0h")
 
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_nwkcl")
@@ -37,11 +64,24 @@ offset_right = 500.0
 offset_bottom = 700.0
 color = Color(0.752941, 0.752941, 0.752941, 1)
 
+[node name="TileMapBG" type="TileMap" parent="Board"]
+position = Vector2(20, 20)
+tile_set = SubResource("TileSet_gt2cf")
+cell_quadrant_size = 3
+format = 2
+layer_0/tile_data = PackedInt32Array(65537, 0, 0)
+
 [node name="Grid" type="ColorRect" parent="Board"]
 layout_mode = 0
 offset_right = 500.0
 offset_bottom = 500.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("3_fq3ta")
+
+[node name="TileMapLocal" type="TileMap" parent="Board"]
+position = Vector2(20, 20)
+tile_set = SubResource("TileSet_sex7n")
+format = 2
+layer_0/tile_data = PackedInt32Array(3, 0, 0, 65540, 1, 0)
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
