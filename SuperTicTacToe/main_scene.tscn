@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=3 uid="uid://ddnaldrnxjkkx"]
 
+[ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
-[ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_nwkcl"]
 [ext_resource type="Script" path="res://scripts/Grid.gd" id="3_fq3ta"]
 [ext_resource type="Texture2D" uid="uid://8psfxlmyf6od" path="res://images/white153x153.png" id="3_twduk"]
 [ext_resource type="Texture2D" uid="uid://bke4ga7k7lq6i" path="res://images/pink.png" id="4_li4sm"]
@@ -59,7 +59,7 @@ sources/0 = SubResource("TileSetAtlasSource_idxt5")
 sources/1 = SubResource("TileSetAtlasSource_yk4th")
 
 [node name="MainScene" type="Node2D"]
-script = ExtResource("1_nwkcl")
+script = ExtResource("1_dsv07")
 
 [node name="BG" type="ColorRect" parent="."]
 offset_right = 500.0
