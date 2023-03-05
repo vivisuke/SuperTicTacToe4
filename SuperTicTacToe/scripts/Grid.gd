@@ -1,4 +1,4 @@
-extends ColorRect
+﻿extends ColorRect
 
 const BD_WIDTH = 500
 const N_HORZ = 9

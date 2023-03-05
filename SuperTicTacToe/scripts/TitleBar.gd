@@ -1,4 +1,4 @@
-extends ColorRect
+﻿extends ColorRect
 
 const RADIUS = 5
 
