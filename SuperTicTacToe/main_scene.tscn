@@ -72,6 +72,15 @@ offset_bottom = 50.0
 color = Color(0.180392, 0.309804, 0.309804, 1)
 script = ExtResource("1_l3eue")
 
+[node name="Label" type="Label" parent="TitleBar"]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 30
+text = "Super Tic-Tac-Toe"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="StartStopButton" type="Button" parent="."]
 anchors_preset = -1
 anchor_left = 0.058
@@ -143,7 +152,7 @@ color = Color(0.627451, 0.627451, 0.627451, 1)
 
 [node name="OptionButton" type="OptionButton" parent="WhitePlayer"]
 layout_mode = 0
-offset_left = 54.0
+offset_left = 50.0
 offset_right = 220.0
 offset_bottom = 51.0
 item_count = 2
@@ -175,7 +184,7 @@ color = Color(0.627451, 0.627451, 0.627451, 1)
 
 [node name="OptionButton" type="OptionButton" parent="BlackPlayer"]
 layout_mode = 0
-offset_left = 54.0
+offset_left = 50.0
 offset_right = 220.0
 offset_bottom = 50.0
 item_count = 2
