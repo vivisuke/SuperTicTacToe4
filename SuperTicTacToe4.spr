@@ -18,7 +18,7 @@
 0016 ◎ C 03/06 03/06 0.001│ToDo│Board：盤面初期化
 0017 ◎ C 03/06 03/06 0.001│ToDo│Board：盤面表示
 0018 ◎ C 03/06 03/06 0.001│ToDo│Board::put()
-0019 ● C 03/06            │ToDo│Board::undo_put()
+0019 ◎ C 03/06 03/06 0.001│ToDo│Board::undo_put()
 0020 ● C 03/06            │ToDo│Board::is_equ()
 0021 ● C 03/06            │ToDo│Board → TileMap
 0022 ● C 03/06            │ToDo│

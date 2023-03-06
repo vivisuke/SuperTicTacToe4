@@ -36,7 +36,7 @@ class Board:
 	var m_next_color
 	var m_lboard
 	var m_gboard
-	var m_n_put_local = []		# 各ローカルボードの着手数
+	var m_nput_local = []		# 各ローカルボードの着手数
 	var m_three_lined_up = []	# 各ローカルボード：三目並んだか？
 	var m_bd_index = []			# 各ローカルボード盤面インデックス
 	var m_gbd_index				# グローバルボード盤面インデックス
@@ -56,7 +56,7 @@ class Board:
 		m_is_game_over = false
 		m_winner = EMPTY
 		m_next_color = WHITE
-		m_n_put_local = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+		m_nput_local = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 		m_three_lined_up = [false, false, false, false, false, false, false, false, false]
 		m_bd_index = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 		m_gbd_index = 0
@@ -118,7 +118,7 @@ class Board:
 		var x3 = x % 3
 		var y3 = y % 3
 		m_next_board = x3 + y3 * 3
-		if m_three_lined_up[m_next_board] || m_n_put_local[m_next_board] == 9:
+		if m_three_lined_up[m_next_board] || m_nput_local[m_next_board] == 9:
 			m_next_board = -1			# 全ローカルボードに着手可能
 	func is_three_stones(x : int, y : int):		# 三目並んだか？
 		var x3 : int = x % 3
@@ -156,7 +156,7 @@ class Board:
 		var mx = x % 3;
 		var my = y % 3;
 		m_bd_index[ix] += g_pow_table[mx+my*3] * (1 if col==WHITE else 2);	#	盤面インデックス更新
-		m_n_put_local[ix] += 1		# 各ローカルボードの着手数
+		m_nput_local[ix] += 1		# 各ローカルボードの着手数
 		var linedup = false			# ローカルボード内で三目ならんだか？
 		if !m_three_lined_up[ix] && is_three_stones(x, y):	# 三目並んだ→グローバルボード更新
 			linedup = true
@@ -171,6 +171,23 @@ class Board:
 		m_stack.push_back(HistItem.new(x, y, linedup, m_next_board))
 		m_next_color = (WHITE + BLACK) - col		# 手番交代
 		update_next_board(x, y)					# next_board 設定
+	func undo_put():
+		if m_stack.is_empty(): return
+		m_next_color = (WHITE + BLACK) - m_next_color	# 手番交代
+		var itm = m_stack.pop_back()
+		m_lboard[itm.m_x + itm.m_y*N_HORZ] = EMPTY
+		var gx = itm.m_x / 3
+		var gy = itm.m_y / 3
+		var ix = gx + gy*3
+		m_nput_local[ix] -= 1
+		var mx = itm.m_x % 3;
+		var my = itm.m_y % 3;
+		m_bd_index[ix] -= g_pow_table[mx+my*3] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
+		if itm.m_linedup:				# 着手で三目並んだ場合
+			m_gboard[gx + gy*3] = EMPTY
+			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
+			m_is_game_over = false
+		m_next_board = itm.m_next_board
 
 #----------------------------------------------------------------------
 
@@ -185,6 +202,10 @@ func _ready():
 	g_bd.print()
 	g_bd.put(0, 0, WHITE)
 	g_bd.print()
+	g_bd.undo_put()
+	g_bd.print()
+	printraw("foo")
+	printraw("bar\n")
 	pass # Replace with function body.
 
 
