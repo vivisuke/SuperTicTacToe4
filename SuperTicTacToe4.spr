@@ -17,6 +17,16 @@
 0015 ◎ C 03/06 03/06 0.001│ToDo│Board クラス追加
 0016 ◎ C 03/06 03/06 0.001│ToDo│Board：盤面初期化
 0017 ◎ C 03/06 03/06 0.001│ToDo│Board：盤面表示
-0018 ● C 03/06            │ToDo│
-0019 ● C 03/06            │ToDo│
-0020 ● C 03/06            │ToDo│
+0018 ◎ C 03/06 03/06 0.001│ToDo│Board::put()
+0019 ● C 03/06            │ToDo│Board::undo_put()
+0020 ● C 03/06            │ToDo│Board::is_equ()
+0021 ● C 03/06            │ToDo│Board → TileMap
+0022 ● C 03/06            │ToDo│
+0023 ● C 03/06            │ToDo│
+0024 ● C 03/06            │ToDo│
+0025 ● C 03/06            │ToDo│
+0026 ● C 03/06            │ToDo│
+0027 ● C 03/06            │ToDo│
+0028 ● C 03/06            │ToDo│
+0029 ● C 03/06            │ToDo│
+0030 ● C 03/06            │ToDo│
