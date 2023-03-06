@@ -21,7 +21,7 @@
 0019 ◎ C 03/06 03/06 0.001│ToDo│Board::undo_put()
 0020 ● C 03/06            │ToDo│Board::is_equ()
 0021 ● C 03/06            │ToDo│Board → TileMap
-0022 ● C 03/06            │ToDo│
+0022 ◎ C 03/06 03/06 0.001│ToDo│Board::select_random()
 0023 ● C 03/06            │ToDo│
 0024 ● C 03/06            │ToDo│
 0025 ● C 03/06            │ToDo│

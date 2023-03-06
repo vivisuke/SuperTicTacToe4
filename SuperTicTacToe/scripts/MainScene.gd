@@ -91,7 +91,13 @@ class Board:
 				txt += ["●", "・", "○"][m_gboard[x + y*(N_HORZ/3)]+1]
 			txt += "\n"
 		txt += "\n"
-		#
+		# 各ローカルボード盤面石数表示
+		txt += "nput[] = \n"
+		for i in range(9):
+			txt += "%d " % m_nput_local[i]
+			if i % 3 == 2: txt += "\n";
+		# 各ローカルボード盤面インデックス表示
+		txt += "bd_index[] = \n"
 		for i in range(9):
 			txt += "%d " % m_bd_index[i]
 			if i % 3 == 2: txt += "\n";
@@ -108,6 +114,8 @@ class Board:
 		print(txt)
 		#print("last_put_pos = ", last_put_pos())
 		#print("eval = ", eval_board_index())
+	func is_game_over(): return m_is_game_over
+	func next_color(): return m_next_color
 	func is_empty(x : int, y : int):			# ローカルボード内のセル状態取得
 		return m_lboard[x + y*N_HORZ] == EMPTY
 	func get_color(x : int, y : int):			# ローカルボード内のセル状態取得
@@ -188,6 +196,24 @@ class Board:
 			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
 			m_is_game_over = false
 		m_next_board = itm.m_next_board
+	func select_random():
+		if m_nput == 0:		# 初期状態
+			return [m_rng.randi_range(0, N_HORZ-1), m_rng.randi_range(0, N_VERT-1)]
+		elif m_next_board < 0:	# 全てのローカルボードに着手可能
+			var lst = []
+			for y in range(N_VERT):
+				for x in range(N_HORZ):
+					if is_empty(x, y): lst.push_back([x, y])
+			return lst[m_rng.randi_range(0, lst.size() - 1)]
+		else:
+			var x0 = (m_next_board % 3) * 3
+			var y0 = (m_next_board / 3) * 3
+			var lst = []
+			for v in range(3):
+				for h in range(3):
+					if is_empty(x0+h, y0+v):
+						lst.push_back([x0+h, y0+v])
+			return lst[m_rng.randi_range(0, lst.size() - 1)]
 
 #----------------------------------------------------------------------
 
@@ -200,13 +226,16 @@ func _ready():
 	g_bd = Board.new()
 	g_bd.m_rng = rng
 	g_bd.print()
-	g_bd.put(0, 0, WHITE)
-	g_bd.print()
-	g_bd.undo_put()
-	g_bd.print()
-	printraw("foo")
-	printraw("bar\n")
-	pass # Replace with function body.
+	#g_bd.put(0, 0, WHITE)
+	#g_bd.print()
+	#g_bd.undo_put()
+	#g_bd.print()
+	#printraw("foo")
+	#printraw("bar\n")
+	while !g_bd.is_game_over():
+		var mv = g_bd.select_random()
+		g_bd.put(mv[0], mv[1], g_bd.next_color())
+		g_bd.print()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
