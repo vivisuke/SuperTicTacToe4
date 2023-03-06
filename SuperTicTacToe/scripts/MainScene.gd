@@ -29,7 +29,7 @@ class HistItem:
 		m_linedup = lu
 		m_next_board = nb
 class Board:
-	var m_nput = 0				# 着手数
+	var m_nput = 0				# 総着手数
 	var m_is_game_over			# 終局状態か？
 	var m_winner				# 勝者
 	var m_next_board = -1		# 着手可能ローカルボード [0, 9)、-1 for 全ローカルボードに着手可能
@@ -183,6 +183,7 @@ class Board:
 		update_next_board(x, y)					# next_board 設定
 	func undo_put():
 		if m_stack.is_empty(): return
+		m_nput -= 1
 		m_next_color = (WHITE + BLACK) - m_next_color	# 手番交代
 		var itm = m_stack.pop_back()
 		m_lboard[itm.m_x + itm.m_y*N_HORZ] = EMPTY
@@ -230,6 +231,85 @@ class Board:
 					if is_empty(x0+h, y0+v):
 						lst.push_back([x0+h, y0+v])
 			return lst[m_rng.randi_range(0, lst.size() - 1)]
+	func alpha_bata(alpha, beta, depth):
+		if depth <= 0 || is_game_over():
+			return eval_board_index()
+		var x0
+		var y0
+		var NH = 3
+		var NV = 3
+		var D = 1
+		if m_next_board < 0:		# 全ローカルボードに着手可能
+			x0 = 0
+			y0 = 0
+			NH = N_HORZ
+			NV = N_VERT
+			D = 2
+		else:
+			x0 = (m_next_board % 3) * 3
+			y0 = (m_next_board / 3) * 3
+		for v in range(NV):
+			for h in range(NH):
+				if is_empty(x0+h, y0+v):
+					put(x0+h, y0+v, next_color)
+					var ev = alpha_bata(alpha, beta, depth-D)
+					undo_put()
+					if m_next_color == WHITE:
+						alpha = max(ev, alpha)
+						if alpha >= beta:
+							print("*** beta cut, alpha = ", alpha)
+							return alpha
+					else:
+						beta = min(ev, beta)
+						if alpha >= beta:
+							print("*** alpha cut, beta = ", beta)
+							return beta
+		print("alpha = ", alpha, ", beta = ", beta)
+		if m_next_color == WHITE:
+			#print("alpha = ", alpha)
+			return alpha
+		else:
+			#print("beta = ", beta)
+			return beta
+	func select_alpha_beta(DEPTH):		# DEPTH先読み＋評価関数で着手決定
+		#var bd = Board.new()
+		m_eval_count = 0
+		#bd.set_eval(g_eval)
+		#bd.copy(self)
+		#var DEPTH = 3
+		var ps;
+		var alpha = -99999
+		var beta = 99999
+		var x0
+		var y0
+		var NH = 3
+		var NV = 3
+		var D = 1
+		if m_next_board < 0:		# 全ローカルボードに着手可能
+			x0 = 0
+			y0 = 0
+			NH = N_HORZ
+			NV = N_VERT
+			D = 2
+		else:
+			x0 = (m_next_board % 3) * 3
+			y0 = (m_next_board / 3) * 3
+		for v in range(NV):
+			for h in range(NH):
+				if is_empty(x0+h, y0+v):
+					put(x0+h, y0+v, m_next_color)
+					var ev = alpha_bata(alpha, beta, DEPTH-D)
+					undo_put()
+					if m_next_color == WHITE:
+						if ev > alpha:
+							alpha = ev
+							ps = [x0+h, y0+v]
+					else:
+						if ev < beta:
+							beta = ev
+							ps = [x0+h, y0+v]
+		print("m_eval_count = ", m_eval_count)
+		return ps
 
 #----------------------------------------------------------------------
 
@@ -258,7 +338,8 @@ func _ready():
 	#printraw("bar\n")
 	while !bd.is_game_over():
 	#for i in range(5):
-		var mv = bd.select_random()
+		#var mv = bd.select_random()
+		var mv = bd.select_alpha_beta(1)
 		bd.put(mv[0], mv[1], bd.next_color())
 		bd.print()
 	pass
