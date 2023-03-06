@@ -67,6 +67,7 @@ class Board:
 		for ix in range(N_HORZ*N_VERT/9): m_gboard.push_back(EMPTY)
 		m_stack = []
 		pass
+	func set_eval_table(eval_table): m_eval_table = eval_table
 	func last_put_pos():
 		if m_stack.is_empty(): return [-1, -1]
 		else: return [m_stack.back().m_x, m_stack.back().m_y]
@@ -113,7 +114,7 @@ class Board:
 		txt += "last_put_pos = [%d, %d]\n" % last_put_pos()
 		print(txt)
 		#print("last_put_pos = ", last_put_pos())
-		#print("eval = ", eval_board_index())
+		print("eval = ", eval_board_index())
 	func is_game_over(): return m_is_game_over
 	func next_color(): return m_next_color
 	func is_empty(x : int, y : int):			# ローカルボード内のセル状態取得
@@ -231,6 +232,10 @@ class Board:
 
 #----------------------------------------------------------------------
 
+const LINED3 = 100;				#	3目並んだ
+const LINED2 = 8;				#	2目並んだ
+const LINED1 = 1;				#	1目のみ
+
 var rng = RandomNumberGenerator.new()
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
@@ -240,22 +245,21 @@ func _ready():
 	rng.randomize()		# Setups a time-based seed
 	#rng.seed = 0		# 固定乱数系列
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
-	g_bd = Board.new()
-	g_bd.m_rng = rng
-	g_bd.print()
-	#g_bd.put(0, 0, WHITE)
-	#g_bd.print()
-	#g_bd.undo_put()
-	#g_bd.print()
+	var bd = Board.new()
+	bd.m_rng = rng
+	bd.set_eval_table(g_eval_table)
+	bd.print()
+	#bd.put(0, 0, WHITE)
+	#bd.print()
+	#bd.undo_put()
+	#bd.print()
 	#printraw("foo")
 	#printraw("bar\n")
-	while !g_bd.is_game_over():
-		var mv = g_bd.select_random()
-		g_bd.put(mv[0], mv[1], g_bd.next_color())
-		g_bd.print()
-const LINED3 = 100;				#	3目並んだ
-const LINED2 = 8;				#	2目並んだ
-const LINED1 = 1;				#	1目のみ
+	while !bd.is_game_over():
+		var mv = bd.select_random()
+		bd.put(mv[0], mv[1], bd.next_color())
+		bd.print()
+	pass
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
 	var sum = c1 + c2 + c3;
 	if( sum == WHITE * 3 ): return LINED3;
