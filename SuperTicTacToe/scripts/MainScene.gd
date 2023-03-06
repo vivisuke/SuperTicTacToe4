@@ -41,7 +41,7 @@ class Board:
 	var m_bd_index = []			# 各ローカルボード盤面インデックス
 	var m_gbd_index				# グローバルボード盤面インデックス
 	var m_stack = []			# 要素：HistItem
-	var m_r_eval				# 盤面インデックス→評価値テーブルへの参照
+	var m_eval_table			# 盤面インデックス→評価値テーブルへの参照
 	var m_eval_count
 	var m_rng = RandomNumberGenerator.new()
 	func _init():
@@ -196,6 +196,20 @@ class Board:
 			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
 			m_is_game_over = false
 		m_next_board = itm.m_next_board
+	func eval_board_index():	# 現局面を（○から見た）評価
+		m_eval_count += 1
+		#if( m_eval_count == 38 ):
+		#	print("stoped for Debug.")
+		var ev = 0
+		if( is_game_over ):
+			ev = m_winner * GVAL * GVAL;
+		else:
+			for i in range(9):
+				if !m_three_lined_up[i]:
+					ev += m_eval_table[m_bd_index[i]]
+			ev += m_eval_table[m_gbd_index] * GVAL
+		#print(m_eval_count, ": ev = ", ev, ", m_next_board = ", m_next_board)
+		return ev
 	func select_random():
 		if m_nput == 0:		# 初期状態
 			return [m_rng.randi_range(0, N_HORZ-1), m_rng.randi_range(0, N_VERT-1)]
@@ -217,12 +231,15 @@ class Board:
 
 #----------------------------------------------------------------------
 
-var g_bd			# 盤面オブジェクト
 var rng = RandomNumberGenerator.new()
+var g_bd			# 盤面オブジェクト
+var g_board3x3 = []			# 3x3 盤面 for 作業用
+var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 
 func _ready():
 	rng.randomize()		# Setups a time-based seed
 	#rng.seed = 0		# 固定乱数系列
+	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
 	g_bd = Board.new()
 	g_bd.m_rng = rng
 	g_bd.print()
@@ -236,6 +253,46 @@ func _ready():
 		var mv = g_bd.select_random()
 		g_bd.put(mv[0], mv[1], g_bd.next_color())
 		g_bd.print()
+const LINED3 = 100;				#	3目並んだ
+const LINED2 = 8;				#	2目並んだ
+const LINED1 = 1;				#	1目のみ
+func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
+	var sum = c1 + c2 + c3;
+	if( sum == WHITE * 3 ): return LINED3;
+	if( sum == BLACK * 3 ): return -LINED3;
+	if( sum == WHITE * 2 ): return LINED2;
+	if( sum == BLACK * 2 ): return -LINED2;
+	var n = c1*c1 + c2*c2 + c3*c3;		#	置かれた石数
+	if( n == 1 ):
+		if( sum == WHITE ): return LINED1;
+		if( sum == BLACK ): return -LINED1;
+	return 0;
+	pass
+func eval3x3(board : Array):
+	var ev = 0;
+	for i in range(3):
+		ev += eval3(board[i*3 + 0], board[i*3 + 1], board[i*3 + 2]);
+		ev += eval3(board[0*3 + i], board[1*3 + i], board[2*3 + i]);
+	ev += eval3(board[0*3 + 0], board[1*3 + 1], board[2*3 + 2]);
+	ev += eval3(board[2*3 + 0], board[1*3 + 1], board[0*3 + 2]);
+	return ev;
+	pass
+func set_board3x3(index : int):
+	var i = 8
+	while i >= 0:
+		match index % 3:
+			0:	g_board3x3[i] = EMPTY
+			1:	g_board3x3[i] = WHITE
+			2:	g_board3x3[i] = BLACK
+		index /= 3
+		i -= 1
+func build_3x3_eval_table():
+	g_board3x3.resize(3*3)
+	g_eval_table.resize(pow(3, 9))		# 3^9
+	for ix in range(g_eval_table.size()):
+		set_board3x3(ix);
+		g_eval_table[ix] = eval3x3(g_board3x3);
+		#print(g_eval_table[ix]);
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
