@@ -112,9 +112,10 @@ class Board:
 			txt += "next turn color: %s\n" % ("O" if m_next_color == WHITE else "X")
 			txt += "next board = %d\n" % m_next_board
 		txt += "last_put_pos = [%d, %d]\n" % last_put_pos()
-		print(txt)
+		txt += "eval = %d\n" % eval_board_index()
+		print(txt, "\n")
 		#print("last_put_pos = ", last_put_pos())
-		print("eval = ", eval_board_index())
+		#print("eval = ", eval_board_index())
 	func is_game_over(): return m_is_game_over
 	func next_color(): return m_next_color
 	func is_empty(x : int, y : int):			# ローカルボード内のセル状態取得
@@ -202,7 +203,7 @@ class Board:
 		#if( m_eval_count == 38 ):
 		#	print("stoped for Debug.")
 		var ev = 0
-		if( is_game_over ):
+		if( is_game_over() ):
 			ev = m_winner * GVAL * GVAL;
 		else:
 			for i in range(9):
@@ -242,8 +243,8 @@ var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 
 func _ready():
-	rng.randomize()		# Setups a time-based seed
-	#rng.seed = 0		# 固定乱数系列
+	#rng.randomize()		# Setups a time-based seed
+	rng.seed = 0		# 固定乱数系列
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
 	var bd = Board.new()
 	bd.m_rng = rng
@@ -256,6 +257,7 @@ func _ready():
 	#printraw("foo")
 	#printraw("bar\n")
 	while !bd.is_game_over():
+	#for i in range(5):
 		var mv = bd.select_random()
 		bd.put(mv[0], mv[1], bd.next_color())
 		bd.print()
