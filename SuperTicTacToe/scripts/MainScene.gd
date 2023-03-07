@@ -118,6 +118,7 @@ class Board:
 		#print("eval = ", eval_board_index())
 	func is_game_over(): return m_is_game_over
 	func next_color(): return m_next_color
+	func next_board(): return m_next_board
 	func is_empty(x : int, y : int):			# ローカルボード内のセル状態取得
 		return m_lboard[x + y*N_HORZ] == EMPTY
 	func get_color(x : int, y : int):			# ローカルボード内のセル状態取得
@@ -258,14 +259,14 @@ class Board:
 					if m_next_color == WHITE:
 						alpha = max(ev, alpha)
 						if alpha >= beta:
-							print("*** beta cut, alpha = ", alpha)
+							#print("*** beta cut, alpha = ", alpha)
 							return alpha
 					else:
 						beta = min(ev, beta)
 						if alpha >= beta:
-							print("*** alpha cut, beta = ", beta)
+							#print("*** alpha cut, beta = ", beta)
 							return beta
-		print("alpha = ", alpha, ", beta = ", beta)
+		#print("alpha = ", alpha, ", beta = ", beta)
 		if m_next_color == WHITE:
 			#print("alpha = ", alpha)
 			return alpha
@@ -327,16 +328,17 @@ func _ready():
 	#rng.randomize()		# Setups a time-based seed
 	rng.seed = 0		# 固定乱数系列
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
-	var bd = Board.new()
-	bd.m_rng = rng
-	bd.set_eval_table(g_eval_table)
-	bd.print()
+	g_bd = Board.new()
+	g_bd.m_rng = rng
+	g_bd.set_eval_table(g_eval_table)
+	g_bd.print()
 	#bd.put(0, 0, WHITE)
 	#bd.print()
 	#bd.undo_put()
 	#bd.print()
 	#printraw("foo")
 	#printraw("bar\n")
+	"""
 	while !bd.is_game_over():
 	#for i in range(5):
 		#var mv = bd.select_random()
@@ -344,6 +346,31 @@ func _ready():
 		bd.put(mv[0], mv[1], bd.next_color())
 		bd.print()
 		#print("OK")
+	"""
+	update_board_tilemaps(g_bd)		# bd の状態から TileMap たちを設定
+	pass
+func col2tsid(col):
+	match col:
+		EMPTY:	return TS_EMPTY
+		WHITE:	return TS_MARU
+		BLACK:	return TS_BATSU
+func tsid2col(id):
+	match id:
+		TS_EMPTY:	return EMPTY
+		TS_MARU:	return WHITE
+		TS_BATSU:	return BLACK
+func update_board_tilemaps(bd : Board):		# bd の状態から TileMap たちを設定
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
+			$Board/TileMapLocal.set_cell(0, Vector2i(x, y), col2tsid(bd.get_color(x, y)), Vector2i(0, 0))
+			$Board/TileMapCursor.set_cell(0, Vector2i(x, y), (0 if bd.last_put_pos() == [x, y] else -1), Vector2i(0, 0))
+	var ix = 0
+	for y in range(N_VERT/3):
+		for x in range(N_HORZ/3):
+			var c = -1 if bd.next_board() >= 0 && ix != bd.next_board() else NEXT_LOCAL_BOARD
+			$Board/TileMapBG.set_cell(0, Vector2i(x, y), c, Vector2i(0, 0))
+			$Board/TileMapGlobal.set_cell(0, Vector2i(x, y), col2tsid(bd.get_gcolor(x, y)), Vector2i(0, 0))
+			ix += 1
 	pass
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
 	var sum = c1 + c2 + c3;
