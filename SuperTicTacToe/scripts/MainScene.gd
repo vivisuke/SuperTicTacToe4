@@ -358,8 +358,13 @@ func _ready():
 		bd.print()
 		#print("OK")
 	"""
+	game_started = true
+	update_next_underline()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	pass
+func update_next_underline():
+	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
+	$BlackPlayer/Underline.visible = game_started && g_bd.next_color() == BLACK
 func col2tsid(col):
 	match col:
 		EMPTY:	return TS_EMPTY
@@ -449,6 +454,7 @@ func _input(event):
 			##if put_and_post_proc(pos.x, pos.y): return
 			g_bd.put(pos.x, pos.y, g_bd.next_color())
 			g_bd.print()
+			update_next_underline()
 			update_board_tilemaps()
 			waiting = WAIT
 	pass
