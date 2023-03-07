@@ -29,7 +29,7 @@
 0027 ◎ C 03/07 03/07 0.001│ToDo│Board::select_alpha_beta(depth) 実装
 0028 ◎ C 03/07 03/07 0.001│ToDo│Board::undo_put()：m_nput をデクリメントしていない
 0029 ◎ C 03/07 03/07 0.001│問題│ローカルボードで三目並んだのに、グローバルボードに石が置かれない場合がある？
-0030 ● C 03/07            │ToDo│Human vs Human 対戦可能に
+0030 ◎ C 03/07 03/07 0.001│ToDo│Human vs Human 対戦可能に
 0031 ◎ C 03/07 03/07 0.001│ToDo│update_board_tilemaps(bd : Board) # bd の状態から TileMap たちを設定
 0032 ● C 03/07            │ToDo│
 0033 ● C 03/07            │ToDo│

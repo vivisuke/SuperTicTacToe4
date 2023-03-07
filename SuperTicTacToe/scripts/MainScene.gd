@@ -319,7 +319,15 @@ const LINED3 = 100;				#	3目並んだ
 const LINED2 = 8;				#	2目並んだ
 const LINED1 = 1;				#	1目のみ
 
+var BOARD_ORG_X
+var BOARD_ORG_Y
+var BOARD_ORG
+
 var rng = RandomNumberGenerator.new()
+var AI_thinking = false
+var waiting = 0;				# ウェイト中カウンタ
+var game_started = false				# ゲーム中
+var pressedPos = Vector2(0, 0)
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
@@ -327,6 +335,9 @@ var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 func _ready():
 	#rng.randomize()		# Setups a time-based seed
 	rng.seed = 0		# 固定乱数系列
+	BOARD_ORG_X = $Board/TileMapLocal.global_position.x
+	BOARD_ORG_Y = $Board/TileMapLocal.global_position.y
+	BOARD_ORG = Vector2(BOARD_ORG_X, BOARD_ORG_Y)
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
 	g_bd = Board.new()
 	g_bd.m_rng = rng
@@ -347,7 +358,7 @@ func _ready():
 		bd.print()
 		#print("OK")
 	"""
-	update_board_tilemaps(g_bd)		# bd の状態から TileMap たちを設定
+	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	pass
 func col2tsid(col):
 	match col:
@@ -359,17 +370,17 @@ func tsid2col(id):
 		TS_EMPTY:	return EMPTY
 		TS_MARU:	return WHITE
 		TS_BATSU:	return BLACK
-func update_board_tilemaps(bd : Board):		# bd の状態から TileMap たちを設定
+func update_board_tilemaps():		# g_bd の状態から TileMap たちを設定
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
-			$Board/TileMapLocal.set_cell(0, Vector2i(x, y), col2tsid(bd.get_color(x, y)), Vector2i(0, 0))
-			$Board/TileMapCursor.set_cell(0, Vector2i(x, y), (0 if bd.last_put_pos() == [x, y] else -1), Vector2i(0, 0))
+			$Board/TileMapLocal.set_cell(0, Vector2i(x, y), col2tsid(g_bd.get_color(x, y)), Vector2i(0, 0))
+			$Board/TileMapCursor.set_cell(0, Vector2i(x, y), (0 if g_bd.last_put_pos() == [x, y] else -1), Vector2i(0, 0))
 	var ix = 0
 	for y in range(N_VERT/3):
 		for x in range(N_HORZ/3):
-			var c = -1 if bd.next_board() >= 0 && ix != bd.next_board() else NEXT_LOCAL_BOARD
+			var c = -1 if g_bd.next_board() >= 0 && ix != g_bd.next_board() else NEXT_LOCAL_BOARD
 			$Board/TileMapBG.set_cell(0, Vector2i(x, y), c, Vector2i(0, 0))
-			$Board/TileMapGlobal.set_cell(0, Vector2i(x, y), col2tsid(bd.get_gcolor(x, y)), Vector2i(0, 0))
+			$Board/TileMapGlobal.set_cell(0, Vector2i(x, y), col2tsid(g_bd.get_gcolor(x, y)), Vector2i(0, 0))
 			ix += 1
 	pass
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
@@ -413,4 +424,31 @@ func build_3x3_eval_table():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	pass
+
+func _input(event):
+	##if !game_started: return
+	if event is InputEventMouseButton:
+		#print(event.position)
+		#print($Board/TileMapLocal.local_to_map(event.position - BOARD_ORG))
+		var pos = $Board/TileMapLocal.local_to_map(event.position - BOARD_ORG)
+		#print("mouse button")
+		if event.is_pressed():
+			#print("pressed")
+			pressedPos = pos
+		elif pos == pressedPos:
+			#print("released")
+			#if n_put == 0:
+			#	game_started = true
+			#	return
+			if pos.x < 0 || pos.x >= N_HORZ || pos.y < 0 || pos.y > N_VERT: return
+			if !g_bd.is_empty(pos.x, pos.y): return
+			var gx = int(pos.x) / 3
+			var gy = int(pos.y) / 3
+			##if !can_put_local(gx, gy): return
+			##if put_and_post_proc(pos.x, pos.y): return
+			g_bd.put(pos.x, pos.y, g_bd.next_color())
+			g_bd.print()
+			update_board_tilemaps()
+			waiting = WAIT
 	pass
