@@ -232,7 +232,7 @@ class Board:
 					if is_empty(x0+h, y0+v):
 						lst.push_back([x0+h, y0+v])
 			return lst[m_rng.randi_range(0, lst.size() - 1)]
-	func alpha_bata(alpha, beta, depth):
+	func alpha_beta(alpha, beta, depth):
 		if depth <= 0 || is_game_over():
 			return eval_board_index()
 		var x0
@@ -252,8 +252,8 @@ class Board:
 		for v in range(NV):
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
-					put(x0+h, y0+v, next_color)
-					var ev = alpha_bata(alpha, beta, depth-D)
+					put(x0+h, y0+v, m_next_color)
+					var ev = alpha_beta(alpha, beta, depth-D)
 					undo_put()
 					if m_next_color == WHITE:
 						alpha = max(ev, alpha)
@@ -299,7 +299,7 @@ class Board:
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
 					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_bata(alpha, beta, DEPTH-D)
+					var ev = alpha_beta(alpha, beta, DEPTH-D)
 					undo_put()
 					if m_next_color == WHITE:
 						if ev > alpha:
@@ -340,9 +340,10 @@ func _ready():
 	while !bd.is_game_over():
 	#for i in range(5):
 		#var mv = bd.select_random()
-		var mv = bd.select_alpha_beta(1)
+		var mv = bd.select_alpha_beta(3)
 		bd.put(mv[0], mv[1], bd.next_color())
 		bd.print()
+		#print("OK")
 	pass
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
 	var sum = c1 + c2 + c3;
