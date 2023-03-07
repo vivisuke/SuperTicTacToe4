@@ -14,7 +14,8 @@ const g_pow_table = [	pow(3, 8), pow(3, 7), pow(3, 6),
 const mb_str = ["Ｘ", "・", "Ｏ"]
 enum {
 	BLACK = -1, EMPTY, WHITE,				#	盤面石値、WHITE for 先手
-	TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
+	#TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
+	TS_EMPTY = -1, TS_WHITE, TS_BLACK,		#	タイルセットID
 	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_3,
 }
 
@@ -327,6 +328,8 @@ var rng = RandomNumberGenerator.new()
 var AI_thinking = false
 var waiting = 0;				# ウェイト中カウンタ
 var game_started = false				# ゲーム中
+var white_player = HUMAN
+var black_player = AI_DEPTH_1	#HUMAN
 var pressedPos = Vector2(0, 0)
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
@@ -342,7 +345,6 @@ func _ready():
 	g_bd = Board.new()
 	g_bd.m_rng = rng
 	g_bd.set_eval_table(g_eval_table)
-	g_bd.print()
 	#bd.put(0, 0, WHITE)
 	#bd.print()
 	#bd.undo_put()
@@ -361,6 +363,7 @@ func _ready():
 	game_started = true
 	update_next_underline()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	g_bd.print()
 	pass
 func update_next_underline():
 	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
@@ -368,13 +371,13 @@ func update_next_underline():
 func col2tsid(col):
 	match col:
 		EMPTY:	return TS_EMPTY
-		WHITE:	return TS_MARU
-		BLACK:	return TS_BATSU
+		WHITE:	return TS_WHITE
+		BLACK:	return TS_BLACK
 func tsid2col(id):
 	match id:
 		TS_EMPTY:	return EMPTY
-		TS_MARU:	return WHITE
-		TS_BATSU:	return BLACK
+		TS_WHITE:	return WHITE
+		TS_BLACK:	return BLACK
 func update_board_tilemaps():		# g_bd の状態から TileMap たちを設定
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
@@ -426,9 +429,37 @@ func build_3x3_eval_table():
 		g_eval_table[ix] = eval3x3(g_board3x3);
 		#print(g_eval_table[ix]);
 
+func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
+	g_bd.put(x, y, g_bd.next_color())
+	g_bd.print()
+	update_next_underline()
+	update_board_tilemaps()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if waiting > 0:
+		waiting -= 1
+	elif( game_started && !AI_thinking &&
+			(g_bd.next_color() == WHITE && white_player >= AI_RANDOM ||
+			g_bd.next_color() == BLACK && black_player >= AI_RANDOM) ):
+		#if !game_started:
+		#	print("??? game_started = ", game_started)
+		AI_thinking = true
+		#var pos = AI_think_random()
+		var typ = white_player if g_bd.next_color() == WHITE else black_player
+		var pos = (g_bd.select_random() if typ == AI_RANDOM else
+					g_bd.select_alpha_beta(3) if typ == AI_DEPTH_1 else
+					g_bd.select_alpha_beta(5))
+		#print("game_started = ", game_started)
+		print("AI put ", pos)
+		#if !is_empty(pos[0], pos[1]):
+		#	pos = (g_bd.select_random() if typ == AI_RANDOM else
+		#			g_bd.select_depth_1() if typ == AI_DEPTH_1 else
+		#			g_bd.select_depth_3())
+		#assert(is_empty(pos[0], pos[1]))
+		put_and_post_proc(pos[0], pos[1])
+		waiting = WAIT
+		AI_thinking = false
+	pass
 	pass
 
 func _input(event):
