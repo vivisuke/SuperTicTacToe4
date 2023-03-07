@@ -197,6 +197,7 @@ class Board:
 		if itm.m_linedup:				# 着手で三目並んだ場合
 			m_gboard[gx + gy*3] = EMPTY
 			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
+			m_three_lined_up[ix] = false
 			m_is_game_over = false
 		m_next_board = itm.m_next_board
 	func eval_board_index():	# 現局面を（○から見た）評価
