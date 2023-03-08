@@ -327,9 +327,9 @@ var BOARD_ORG
 var rng = RandomNumberGenerator.new()
 var AI_thinking = false
 var waiting = 0;				# ウェイト中カウンタ
-var game_started = false				# ゲーム中
+var game_started = false		# ゲーム中か？
 var white_player = HUMAN
-var black_player = AI_DEPTH_1	#HUMAN
+var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
@@ -360,11 +360,20 @@ func _ready():
 		bd.print()
 		#print("OK")
 	"""
-	game_started = true
 	update_next_underline()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	g_bd.print()
+	$MessLabel.text = "【Start Game】を押してください。"
 	pass
+func init_board():
+	g_bd.init()
+	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+func do_game_over():
+	game_started = false
+	$WhitePlayer/OptionButton.disabled = false
+	$BlackPlayer/OptionButton.disabled = false
+	$StartStopButton.text = "Start Game"
+	update_board_tilemaps()
 func update_next_underline():
 	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
 	$BlackPlayer/Underline.visible = game_started && g_bd.next_color() == BLACK
@@ -463,7 +472,7 @@ func _process(delta):
 	pass
 
 func _input(event):
-	##if !game_started: return
+	if !game_started: return
 	if event is InputEventMouseButton:
 		#print(event.position)
 		#print($Board/TileMapLocal.local_to_map(event.position - BOARD_ORG))
@@ -489,3 +498,28 @@ func _input(event):
 			update_board_tilemaps()
 			waiting = WAIT
 	pass
+
+
+func _on_start_stop_button_pressed():
+	game_started = !game_started
+	if game_started:
+		$WhitePlayer/OptionButton.disabled = true
+		$BlackPlayer/OptionButton.disabled = true
+		init_board()
+		$StartStopButton.text = "Stop Game"
+		$MessLabel.text = "次の手番はＯです。"
+	else:
+		$MessLabel.text = ""
+		do_game_over()
+	update_next_underline()
+	pass # Replace with function body.
+
+
+func _on_White_option_button_item_selected(index):
+	white_player = index
+	pass # Replace with function body.
+
+
+func _on_Black_option_button_item_selected(index):
+	black_player = index
+	pass # Replace with function body.

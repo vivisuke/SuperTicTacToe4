@@ -91,7 +91,7 @@ offset_left = 18.0
 offset_top = 65.0
 offset_right = 154.0
 offset_bottom = 97.0
-text = "StartGame
+text = "Start Game
 "
 
 [node name="Board" type="ColorRect" parent="."]
@@ -209,3 +209,5 @@ offset_bottom = 60.0
 color = Color(1, 1, 0, 1)
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
+[connection signal="item_selected" from="WhitePlayer/OptionButton" to="." method="_on_White_option_button_item_selected"]
+[connection signal="item_selected" from="BlackPlayer/OptionButton" to="." method="_on_Black_option_button_item_selected"]
