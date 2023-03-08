@@ -441,6 +441,8 @@ func build_3x3_eval_table():
 func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
 	g_bd.put(x, y, g_bd.next_color())
 	g_bd.print()
+	if g_bd.is_game_over():
+		game_started = false
 	update_next_underline()
 	update_board_tilemaps()
 
@@ -492,10 +494,11 @@ func _input(event):
 			var gy = int(pos.y) / 3
 			##if !can_put_local(gx, gy): return
 			##if put_and_post_proc(pos.x, pos.y): return
-			g_bd.put(pos.x, pos.y, g_bd.next_color())
-			g_bd.print()
-			update_next_underline()
-			update_board_tilemaps()
+			put_and_post_proc(pos.x, pos.y)
+			#g_bd.put(pos.x, pos.y, g_bd.next_color())
+			#g_bd.print()
+			#update_next_underline()
+			#update_board_tilemaps()
 			waiting = WAIT
 	pass
 
