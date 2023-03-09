@@ -442,14 +442,14 @@ func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
 	if g_bd.is_game_over():
 		game_started = false
 		match g_bd.winner():
-			EMPTY:	$MessLabel.text = "引き分け"
-			WHITE:	$MessLabel.text = "○ の勝ち"
-			BLACK:	$MessLabel.text = "☓ の勝ち"
+			EMPTY:	$MessLabel.text = "引き分けです。"
+			WHITE:	$MessLabel.text = "○ の勝ちです。"
+			BLACK:	$MessLabel.text = "☓ の勝ちです。"
 	else:
 		if g_bd.next_color() == WHITE:
-			$MessLabel.text = "次の手番はＯです。"
+			$MessLabel.text = "Ｏ の手番です。"
 		else:
-			$MessLabel.text = "次の手番は☓です。"
+			$MessLabel.text = "☓ の手番です。"
 	update_next_underline()
 	update_board_tilemaps()
 
@@ -520,7 +520,7 @@ func _on_start_stop_button_pressed():
 		$InitButton.disabled = true
 		init_board()
 		$StartStopButton.text = "Stop Game"
-		$MessLabel.text = "次の手番はＯです。"
+		$MessLabel.text = "Ｏ の手番です。"
 	else:
 		$MessLabel.text = ""
 		on_game_over()	#??? Undone: ゲーム中断処理
