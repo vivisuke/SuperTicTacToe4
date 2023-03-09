@@ -16,7 +16,7 @@ enum {
 	BLACK = -1, EMPTY, WHITE,				#	盤面石値、WHITE for 先手
 	#TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
 	TS_EMPTY = -1, TS_WHITE, TS_BLACK,		#	タイルセットID
-	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_3, AI_DEPTH_5, 
+	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_3, AI_DEPTH_5, AI_DEPTH_7, 
 }
 
 class HistItem:
@@ -352,15 +352,6 @@ func _ready():
 	#bd.print()
 	#printraw("foo")
 	#printraw("bar\n")
-	"""
-	while !bd.is_game_over():
-	#for i in range(5):
-		#var mv = bd.select_random()
-		var mv = bd.select_alpha_beta(3)
-		bd.put(mv[0], mv[1], bd.next_color())
-		bd.print()
-		#print("OK")
-	"""
 	update_next_underline()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	g_bd.print()
@@ -446,7 +437,7 @@ func build_3x3_eval_table():
 
 func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
 	g_bd.put(x, y, g_bd.next_color())
-	g_bd.print()
+	#g_bd.print()
 	if g_bd.is_game_over():
 		game_started = false
 		match g_bd.winner():
@@ -470,7 +461,8 @@ func _process(delta):
 		var pos = (g_bd.select_random() if typ == AI_RANDOM else
 					g_bd.select_alpha_beta(1) if typ == AI_DEPTH_1 else
 					g_bd.select_alpha_beta(3) if typ == AI_DEPTH_3 else
-					g_bd.select_alpha_beta(5))
+					g_bd.select_alpha_beta(5) if typ == AI_DEPTH_5 else
+					g_bd.select_alpha_beta(7))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
 		put_and_post_proc(pos[0], pos[1])
