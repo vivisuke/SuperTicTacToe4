@@ -282,6 +282,9 @@ class Board:
 		#bd.set_eval(g_eval)
 		#bd.copy(self)
 		#var DEPTH = 3
+		if m_nput >= 9*2: DEPTH += 1
+		if m_nput >= 9*4: DEPTH += 1
+		if m_nput >= 9*6: DEPTH += 1
 		var ps;
 		var alpha = -99999
 		var beta = 99999
