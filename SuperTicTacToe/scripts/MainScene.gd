@@ -313,6 +313,7 @@ class Board:
 							beta = ev
 							ps = [x0+h, y0+v]
 		print("m_eval_count = ", m_eval_count)
+		print("eval = ", (alpha if m_next_color == WHITE else beta))
 		return ps
 
 #----------------------------------------------------------------------
@@ -499,10 +500,8 @@ func _input(event):
 			if !can_put_local(gx, gy): return
 			##if put_and_post_proc(pos.x, pos.y): return
 			put_and_post_proc(pos.x, pos.y)
-			#g_bd.put(pos.x, pos.y, g_bd.next_color())
-			#g_bd.print()
-			#update_next_underline()
-			#update_board_tilemaps()
+			if g_bd.is_game_over():
+				on_game_over()
 			waiting = WAIT
 	pass
 
