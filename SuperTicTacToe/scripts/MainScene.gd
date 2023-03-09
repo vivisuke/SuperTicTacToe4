@@ -366,6 +366,7 @@ func _ready():
 func init_board():
 	g_bd.init()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	$NStoneLabel.text = "#1 (spc: 81)"
 	$MessLabel.text = "【Start Game】を押してください。"
 func on_game_over():
 	game_started = false
@@ -378,6 +379,8 @@ func on_game_over():
 func update_next_underline():
 	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
 	$BlackPlayer/Underline.visible = game_started && g_bd.next_color() == BLACK
+func update_nstone():
+	$NStoneLabel.text = "#%d (spc: %d)" % [g_bd.m_nput+1, 81-g_bd.m_nput]
 func col2tsid(col):
 	match col:
 		EMPTY:	return TS_EMPTY
@@ -457,7 +460,7 @@ func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
 			$MessLabel.text = "☓ の手番です。"
 	update_next_underline()
 	update_board_tilemaps()
-
+	update_nstone()
 func _process(delta):
 	if waiting > 0:
 		waiting -= 1
