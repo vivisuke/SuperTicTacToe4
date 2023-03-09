@@ -370,10 +370,12 @@ func init_board():
 	g_bd.init()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	$MessLabel.text = "【Start Game】を押してください。"
-func do_game_over():
+func on_game_over():
 	game_started = false
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
+	$InitButton.disabled = false
+	$StartStopButton.disabled = true
 	$StartStopButton.text = "Start Game"
 	update_board_tilemaps()
 func update_next_underline():
@@ -474,6 +476,8 @@ func _process(delta):
 		put_and_post_proc(pos[0], pos[1])
 		waiting = WAIT
 		AI_thinking = false
+		if g_bd.is_game_over():
+			on_game_over()
 	pass
 
 func _input(event):
@@ -508,6 +512,7 @@ func _input(event):
 func _on_init_button_pressed():
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
+	$StartStopButton.disabled = false
 	init_board()
 	pass # Replace with function body.
 
@@ -516,12 +521,13 @@ func _on_start_stop_button_pressed():
 	if game_started:
 		$WhitePlayer/OptionButton.disabled = true
 		$BlackPlayer/OptionButton.disabled = true
+		$InitButton.disabled = true
 		init_board()
 		$StartStopButton.text = "Stop Game"
 		$MessLabel.text = "次の手番はＯです。"
 	else:
 		$MessLabel.text = ""
-		do_game_over()
+		on_game_over()	#??? Undone: ゲーム中断処理
 	update_next_underline()
 	pass # Replace with function body.
 
