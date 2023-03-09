@@ -444,6 +444,11 @@ func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
 			EMPTY:	$MessLabel.text = "引き分け"
 			WHITE:	$MessLabel.text = "○ の勝ち"
 			BLACK:	$MessLabel.text = "☓ の勝ち"
+	else:
+		if g_bd.next_color() == WHITE:
+			$MessLabel.text = "次の手番はＯです。"
+		else:
+			$MessLabel.text = "次の手番は☓です。"
 	update_next_underline()
 	update_board_tilemaps()
 
