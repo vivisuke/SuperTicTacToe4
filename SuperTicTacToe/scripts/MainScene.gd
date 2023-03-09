@@ -369,6 +369,7 @@ func _ready():
 func init_board():
 	g_bd.init()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	$MessLabel.text = "【Start Game】を押してください。"
 func do_game_over():
 	game_started = false
 	$WhitePlayer/OptionButton.disabled = false
@@ -509,6 +510,9 @@ func _input(event):
 			waiting = WAIT
 	pass
 
+func _on_init_button_pressed():
+	init_board()
+	pass # Replace with function body.
 
 func _on_start_stop_button_pressed():
 	game_started = !game_started
@@ -533,3 +537,4 @@ func _on_White_option_button_item_selected(index):
 func _on_Black_option_button_item_selected(index):
 	black_player = index
 	pass # Replace with function body.
+
