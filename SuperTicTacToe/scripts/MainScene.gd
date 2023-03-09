@@ -202,6 +202,7 @@ class Board:
 			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
 			m_three_lined_up[ix] = false
 			m_is_game_over = false
+			m_winner = EMPTY
 		m_next_board = itm.m_next_board
 	func eval_board_index():	# 現局面を（○から見た）評価
 		m_eval_count += 1
@@ -314,6 +315,7 @@ class Board:
 							ps = [x0+h, y0+v]
 		print("m_eval_count = ", m_eval_count)
 		print("eval = ", (alpha if m_next_color == WHITE else beta))
+		print("winner = ", m_winner)
 		return ps
 
 #----------------------------------------------------------------------
