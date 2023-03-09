@@ -220,7 +220,7 @@ popup/item_3/text = "AI Depth 3"
 popup/item_3/id = 3
 popup/item_4/text = "AI Depth 5"
 popup/item_4/id = 4
-popup/item_5/text = "AU Depth 7"
+popup/item_5/text = "AI Depth 7"
 popup/item_5/id = 5
 
 [node name="TextureRect" type="TextureRect" parent="BlackPlayer"]
