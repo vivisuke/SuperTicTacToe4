@@ -168,7 +168,7 @@ layout_mode = 0
 offset_left = 50.0
 offset_right = 220.0
 offset_bottom = 51.0
-item_count = 4
+item_count = 5
 selected = 0
 popup/item_0/text = "Human"
 popup/item_0/id = 0
@@ -178,6 +178,8 @@ popup/item_2/text = "AI Depth 1"
 popup/item_2/id = 2
 popup/item_3/text = "AI Depth 3"
 popup/item_3/id = 3
+popup/item_4/text = "AI Depth 5"
+popup/item_4/id = 4
 
 [node name="TextureRect" type="TextureRect" parent="WhitePlayer"]
 layout_mode = 0
@@ -204,7 +206,7 @@ layout_mode = 0
 offset_left = 50.0
 offset_right = 220.0
 offset_bottom = 50.0
-item_count = 4
+item_count = 5
 selected = 0
 popup/item_0/text = "Human"
 popup/item_0/id = 0
@@ -214,6 +216,8 @@ popup/item_2/text = "AI Depth 1"
 popup/item_2/id = 2
 popup/item_3/text = "AI Depth 3"
 popup/item_3/id = 3
+popup/item_4/text = "AI Depth 5"
+popup/item_4/id = 4
 
 [node name="TextureRect" type="TextureRect" parent="BlackPlayer"]
 layout_mode = 0

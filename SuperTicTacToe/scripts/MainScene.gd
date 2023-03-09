@@ -16,7 +16,7 @@ enum {
 	BLACK = -1, EMPTY, WHITE,				#	盤面石値、WHITE for 先手
 	#TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
 	TS_EMPTY = -1, TS_WHITE, TS_BLACK,		#	タイルセットID
-	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_3,
+	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_3, AI_DEPTH_5, 
 }
 
 class HistItem:
@@ -466,19 +466,14 @@ func _process(delta):
 		#var pos = AI_think_random()
 		var typ = white_player if g_bd.next_color() == WHITE else black_player
 		var pos = (g_bd.select_random() if typ == AI_RANDOM else
-					g_bd.select_alpha_beta(3) if typ == AI_DEPTH_1 else
+					g_bd.select_alpha_beta(1) if typ == AI_DEPTH_1 else
+					g_bd.select_alpha_beta(3) if typ == AI_DEPTH_3 else
 					g_bd.select_alpha_beta(5))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
-		#if !is_empty(pos[0], pos[1]):
-		#	pos = (g_bd.select_random() if typ == AI_RANDOM else
-		#			g_bd.select_depth_1() if typ == AI_DEPTH_1 else
-		#			g_bd.select_depth_3())
-		#assert(is_empty(pos[0], pos[1]))
 		put_and_post_proc(pos[0], pos[1])
 		waiting = WAIT
 		AI_thinking = false
-	pass
 	pass
 
 func _input(event):
@@ -511,6 +506,8 @@ func _input(event):
 	pass
 
 func _on_init_button_pressed():
+	$WhitePlayer/OptionButton.disabled = false
+	$BlackPlayer/OptionButton.disabled = false
 	init_board()
 	pass # Replace with function body.
 
