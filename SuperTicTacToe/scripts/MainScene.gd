@@ -400,6 +400,8 @@ func update_board_tilemaps():		# g_bd の状態から TileMap たちを設定
 			$Board/TileMapGlobal.set_cell(0, Vector2i(x, y), col2tsid(g_bd.get_gcolor(x, y)), Vector2i(0, 0))
 			ix += 1
 	pass
+func can_put_local(x : int, y : int):
+	return $Board/TileMapBG.get_cell_source_id(0, Vector2i(x, y)) == NEXT_LOCAL_BOARD
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
 	var sum = c1 + c2 + c3;
 	if( sum == WHITE * 3 ): return LINED3;
@@ -492,7 +494,7 @@ func _input(event):
 			if !g_bd.is_empty(pos.x, pos.y): return
 			var gx = int(pos.x) / 3
 			var gy = int(pos.y) / 3
-			##if !can_put_local(gx, gy): return
+			if !can_put_local(gx, gy): return
 			##if put_and_post_proc(pos.x, pos.y): return
 			put_and_post_proc(pos.x, pos.y)
 			#g_bd.put(pos.x, pos.y, g_bd.next_color())
