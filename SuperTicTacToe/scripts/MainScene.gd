@@ -118,6 +118,7 @@ class Board:
 		#print("last_put_pos = ", last_put_pos())
 		#print("eval = ", eval_board_index())
 	func is_game_over(): return m_is_game_over
+	func winner(): return m_winner
 	func next_color(): return m_next_color
 	func next_board(): return m_next_board
 	func is_empty(x : int, y : int):			# ローカルボード内のセル状態取得
@@ -445,6 +446,10 @@ func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
 	g_bd.print()
 	if g_bd.is_game_over():
 		game_started = false
+		match g_bd.winner():
+			EMPTY:	$MessLabel.text = "引き分け"
+			WHITE:	$MessLabel.text = "○ の勝ち"
+			BLACK:	$MessLabel.text = "☓ の勝ち"
 	update_next_underline()
 	update_board_tilemaps()
 
