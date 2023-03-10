@@ -554,3 +554,11 @@ func _on_Black_option_button_item_selected(index):
 	black_player = index
 	pass # Replace with function body.
 
+
+
+func _on_undo_button_pressed():
+	if g_bd.m_stack.size() < 2: return
+	g_bd.undo_put()
+	g_bd.undo_put()
+	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	pass # Replace with function body.
