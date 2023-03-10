@@ -341,3 +341,4 @@ horizontal_alignment = 1
 [connection signal="item_selected" from="BlackPlayer/OptionButton" to="." method="_on_Black_option_button_item_selected"]
 [connection signal="pressed" from="UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="BackwardButton" to="." method="_on_backward_button_pressed"]
+[connection signal="pressed" from="ForwardButton" to="." method="_on_forward_button_pressed"]

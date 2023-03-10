@@ -338,6 +338,7 @@ var game_started = false		# ゲーム中か？
 var white_player = HUMAN
 var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
+var move_hist = []				# 着手履歴
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
@@ -352,12 +353,7 @@ func _ready():
 	g_bd = Board.new()
 	g_bd.m_rng = rng
 	g_bd.set_eval_table(g_eval_table)
-	#bd.put(0, 0, WHITE)
-	#bd.print()
-	#bd.undo_put()
-	#bd.print()
-	#printraw("foo")
-	#printraw("bar\n")
+	init_board()
 	update_next_underline()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	g_bd.print()
@@ -366,6 +362,7 @@ func _ready():
 func init_board():
 	g_bd.init()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	move_hist = []
 	$NStoneLabel.text = "#1 (spc: 81)"
 	$MessLabel.text = "【Start Game】を押してください。"
 func on_game_over():
@@ -444,9 +441,12 @@ func build_3x3_eval_table():
 		g_eval_table[ix] = eval3x3(g_board3x3);
 		#print(g_eval_table[ix]);
 
-func put_and_post_proc(x : int, y : int):	# 着手処理とその後処理
+func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g_bd.put(x, y, g_bd.next_color())
 	#g_bd.print()
+	if !replay:
+		move_hist.resize(g_bd.m_nput-1)
+		move_hist.push_back([x, y])
 	if g_bd.is_game_over():
 		game_started = false
 		match g_bd.winner():
@@ -479,7 +479,7 @@ func _process(delta):
 					g_bd.select_alpha_beta(7))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
-		put_and_post_proc(pos[0], pos[1])
+		put_and_post_proc(pos[0], pos[1], false)
 		waiting = WAIT
 		AI_thinking = false
 		if g_bd.is_game_over():
@@ -506,8 +506,7 @@ func _input(event):
 			var gx = int(pos.x) / 3
 			var gy = int(pos.y) / 3
 			if !can_put_local(gx, gy): return
-			##if put_and_post_proc(pos.x, pos.y): return
-			put_and_post_proc(pos.x, pos.y)
+			put_and_post_proc(pos.x, pos.y, false)
 			if g_bd.is_game_over():
 				on_game_over()
 			waiting = WAIT
@@ -544,17 +543,13 @@ func _on_start_stop_button_pressed():
 	update_next_underline()
 	pass # Replace with function body.
 
-
 func _on_White_option_button_item_selected(index):
 	white_player = index
 	pass # Replace with function body.
 
-
 func _on_Black_option_button_item_selected(index):
 	black_player = index
 	pass # Replace with function body.
-
-
 
 func _on_undo_button_pressed():
 	if g_bd.m_stack.size() < 2: return
@@ -564,11 +559,18 @@ func _on_undo_button_pressed():
 	update_nstone()
 	pass # Replace with function body.
 
-
 func _on_backward_button_pressed():
 	if g_bd.m_stack.size() < 1: return
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_next_underline()
 	update_nstone()
+	print("move_hist = ", move_hist)
+	pass # Replace with function body.
+
+func _on_forward_button_pressed():
+	if move_hist.size() <= g_bd.m_nput: return
+	print("move_hist = ", move_hist)
+	var t = move_hist[g_bd.m_nput]
+	put_and_post_proc(t[0], t[1], true)
 	pass # Replace with function body.
