@@ -517,6 +517,7 @@ func _on_init_button_pressed():
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
 	$StartStopButton.disabled = false
+	$StartStopButton.text = "Start Game"
 	init_board()
 	pass # Replace with function body.
 
@@ -526,12 +527,20 @@ func _on_start_stop_button_pressed():
 		$WhitePlayer/OptionButton.disabled = true
 		$BlackPlayer/OptionButton.disabled = true
 		$InitButton.disabled = true
-		init_board()
 		$StartStopButton.text = "Stop Game"
-		$MessLabel.text = "Ｏ の手番です。"
+		if g_bd.is_game_over():
+			init_board()
+		if g_bd.next_color() == WHITE:
+			$MessLabel.text = "Ｏ の手番です。"
+		else:
+			$MessLabel.text = "☓ の手番です。"
 	else:
+		if !g_bd.is_game_over():
+			$WhitePlayer/OptionButton.disabled = false
+			$BlackPlayer/OptionButton.disabled = false
+			$InitButton.disabled = false
+			$StartStopButton.text = "Cont. Game"
 		$MessLabel.text = ""
-		on_game_over()	#??? Undone: ゲーム中断処理
 	update_next_underline()
 	pass # Replace with function body.
 
