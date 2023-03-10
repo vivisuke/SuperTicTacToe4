@@ -374,7 +374,7 @@ func on_game_over():
 	$BlackPlayer/OptionButton.disabled = false
 	$InitButton.disabled = false
 	$StartStopButton.disabled = true
-	$StartStopButton.text = "Start Game"
+	$StartStopButton.text = "▶ Start Game"
 	update_board_tilemaps()
 func update_next_underline():
 	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
@@ -517,7 +517,7 @@ func _on_init_button_pressed():
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
 	$StartStopButton.disabled = false
-	$StartStopButton.text = "Start Game"
+	$StartStopButton.text = "▶ Start Game"
 	init_board()
 	pass # Replace with function body.
 
@@ -527,7 +527,7 @@ func _on_start_stop_button_pressed():
 		$WhitePlayer/OptionButton.disabled = true
 		$BlackPlayer/OptionButton.disabled = true
 		$InitButton.disabled = true
-		$StartStopButton.text = "Stop Game"
+		$StartStopButton.text = "■ Stop Game"
 		if g_bd.is_game_over():
 			init_board()
 		if g_bd.next_color() == WHITE:
@@ -539,7 +539,7 @@ func _on_start_stop_button_pressed():
 			$WhitePlayer/OptionButton.disabled = false
 			$BlackPlayer/OptionButton.disabled = false
 			$InitButton.disabled = false
-			$StartStopButton.text = "Cont. Game"
+			$StartStopButton.text = "▶ Cont. Game"
 		$MessLabel.text = ""
 	update_next_underline()
 	pass # Replace with function body.
@@ -560,5 +560,15 @@ func _on_undo_button_pressed():
 	if g_bd.m_stack.size() < 2: return
 	g_bd.undo_put()
 	g_bd.undo_put()
-	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	update_board_tilemaps()
+	update_nstone()
+	pass # Replace with function body.
+
+
+func _on_backward_button_pressed():
+	if g_bd.m_stack.size() < 1: return
+	g_bd.undo_put()
+	update_board_tilemaps()
+	update_next_underline()
+	update_nstone()
 	pass # Replace with function body.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=27 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -12,6 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://bjhabljmvrar0" path="res://images/undo_black.png" id="10_kv7xa"]
 [ext_resource type="Texture2D" uid="uid://dkfrewd5wfyl6" path="res://images/undo_white.png" id="11_uycg4"]
 [ext_resource type="Texture2D" uid="uid://cmfrivkhav2n" path="res://images/undo_gray.png" id="12_wvgq7"]
+[ext_resource type="Texture2D" uid="uid://dady7pp3p6kkf" path="res://images/skip_previous_black.png" id="13_a0x5j"]
+[ext_resource type="Texture2D" uid="uid://cw4lcq3gm4ekr" path="res://images/back_arrow_black.png" id="14_1awur"]
+[ext_resource type="Texture2D" uid="uid://bl6wqrnma71iw" path="res://images/play_arrow_black.png" id="15_2esqr"]
+[ext_resource type="Texture2D" uid="uid://bourbxmjkktb4" path="res://images/skip_next_black.png" id="16_1mkmv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
 texture = ExtResource("3_twduk")
@@ -94,7 +98,7 @@ offset_left = 10.0
 offset_top = 65.0
 offset_right = 146.0
 offset_bottom = 97.0
-text = "Start Game
+text = "▶ Start Game
 "
 
 [node name="InitButton" type="Button" parent="."]
@@ -264,7 +268,71 @@ offset_top = 36.0
 offset_right = 48.0
 offset_bottom = 59.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Undo"
+text = "undo"
+horizontal_alignment = 1
+
+[node name="SkipPrevButton" type="TextureButton" parent="."]
+offset_left = 80.0
+offset_top = 770.0
+offset_right = 128.0
+offset_bottom = 818.0
+texture_normal = ExtResource("13_a0x5j")
+
+[node name="Label" type="Label" parent="SkipPrevButton"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 48.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "first"
+horizontal_alignment = 1
+
+[node name="BackwardButton" type="TextureButton" parent="."]
+offset_left = 150.0
+offset_top = 770.0
+offset_right = 198.0
+offset_bottom = 818.0
+texture_normal = ExtResource("14_1awur")
+
+[node name="Label" type="Label" parent="BackwardButton"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 48.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "back"
+horizontal_alignment = 1
+
+[node name="ForwardButton" type="TextureButton" parent="."]
+offset_left = 220.0
+offset_top = 770.0
+offset_right = 268.0
+offset_bottom = 818.0
+texture_normal = ExtResource("15_2esqr")
+
+[node name="Label" type="Label" parent="ForwardButton"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 48.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "fwd"
+horizontal_alignment = 1
+
+[node name="SkipNextButton" type="TextureButton" parent="."]
+offset_left = 290.0
+offset_top = 770.0
+offset_right = 338.0
+offset_bottom = 818.0
+texture_normal = ExtResource("16_1mkmv")
+
+[node name="Label" type="Label" parent="SkipNextButton"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 48.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "last"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
@@ -272,3 +340,4 @@ horizontal_alignment = 1
 [connection signal="item_selected" from="WhitePlayer/OptionButton" to="." method="_on_White_option_button_item_selected"]
 [connection signal="item_selected" from="BlackPlayer/OptionButton" to="." method="_on_Black_option_button_item_selected"]
 [connection signal="pressed" from="UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="BackwardButton" to="." method="_on_backward_button_pressed"]
