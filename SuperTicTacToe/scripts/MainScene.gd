@@ -541,36 +541,35 @@ func _on_start_stop_button_pressed():
 			$StartStopButton.text = "▶ Cont. Game"
 		$MessLabel.text = ""
 	update_next_underline()
-	pass # Replace with function body.
-
 func _on_White_option_button_item_selected(index):
 	white_player = index
-	pass # Replace with function body.
-
 func _on_Black_option_button_item_selected(index):
 	black_player = index
-	pass # Replace with function body.
-
 func _on_undo_button_pressed():
 	if g_bd.m_stack.size() < 2: return
 	g_bd.undo_put()
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_nstone()
-	pass # Replace with function body.
-
 func _on_backward_button_pressed():
 	if g_bd.m_stack.size() < 1: return
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_next_underline()
 	update_nstone()
-	print("move_hist = ", move_hist)
-	pass # Replace with function body.
-
+	#print("move_hist = ", move_hist)
 func _on_forward_button_pressed():
 	if move_hist.size() <= g_bd.m_nput: return
-	print("move_hist = ", move_hist)
+	#print("move_hist = ", move_hist)
 	var t = move_hist[g_bd.m_nput]
 	put_and_post_proc(t[0], t[1], true)
-	pass # Replace with function body.
+func _on_skip_prev_button_pressed():
+	while !g_bd.m_stack.is_empty():
+		g_bd.undo_put()
+	update_board_tilemaps()
+	update_next_underline()
+	update_nstone()
+func _on_skip_next_button_pressed():
+	while move_hist.size() > g_bd.m_nput:
+		var t = move_hist[g_bd.m_nput]
+		put_and_post_proc(t[0], t[1], true)
