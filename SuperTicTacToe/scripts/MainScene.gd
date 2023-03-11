@@ -461,6 +461,7 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 	update_next_underline()
 	update_board_tilemaps()
 	update_nstone()
+	update_back_forward_buttons()
 func _process(delta):
 	if waiting > 0:
 		waiting -= 1
@@ -541,6 +542,7 @@ func _on_start_stop_button_pressed():
 			$StartStopButton.text = "▶ Cont. Game"
 		$MessLabel.text = ""
 	update_next_underline()
+	update_back_forward_buttons()
 func _on_White_option_button_item_selected(index):
 	white_player = index
 func _on_Black_option_button_item_selected(index):
@@ -551,12 +553,19 @@ func _on_undo_button_pressed():
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_nstone()
+func update_back_forward_buttons():
+	print("update_back_forward_buttons()")
+	$SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
+	$BackwardButton.disabled = game_started || g_bd.m_stack.is_empty()
+	$ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
+	$SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 func _on_backward_button_pressed():
 	if g_bd.m_stack.size() < 1: return
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_next_underline()
 	update_nstone()
+	update_back_forward_buttons()
 	#print("move_hist = ", move_hist)
 func _on_forward_button_pressed():
 	if move_hist.size() <= g_bd.m_nput: return
@@ -569,6 +578,7 @@ func _on_skip_prev_button_pressed():
 	update_board_tilemaps()
 	update_next_underline()
 	update_nstone()
+	update_back_forward_buttons()
 func _on_skip_next_button_pressed():
 	while move_hist.size() > g_bd.m_nput:
 		var t = move_hist[g_bd.m_nput]

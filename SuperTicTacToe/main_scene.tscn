@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=35 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -14,8 +14,16 @@
 [ext_resource type="Texture2D" uid="uid://cmfrivkhav2n" path="res://images/undo_gray.png" id="12_wvgq7"]
 [ext_resource type="Texture2D" uid="uid://dady7pp3p6kkf" path="res://images/skip_previous_black.png" id="13_a0x5j"]
 [ext_resource type="Texture2D" uid="uid://cw4lcq3gm4ekr" path="res://images/back_arrow_black.png" id="14_1awur"]
+[ext_resource type="Texture2D" uid="uid://55hldeslrodu" path="res://images/skip_previous_white.png" id="14_yiam8"]
 [ext_resource type="Texture2D" uid="uid://bl6wqrnma71iw" path="res://images/play_arrow_black.png" id="15_2esqr"]
+[ext_resource type="Texture2D" uid="uid://wqjnekemb7m0" path="res://images/back_arrow_white.png" id="15_cnqbk"]
+[ext_resource type="Texture2D" uid="uid://fi3cm8m46prp" path="res://images/skip_previous_gray.png" id="15_mfw7a"]
 [ext_resource type="Texture2D" uid="uid://bourbxmjkktb4" path="res://images/skip_next_black.png" id="16_1mkmv"]
+[ext_resource type="Texture2D" uid="uid://dpgdulnydalhb" path="res://images/back_arrow_gray.png" id="16_wq0v2"]
+[ext_resource type="Texture2D" uid="uid://dkia8hemsj51a" path="res://images/play_arrow_white.png" id="18_qjqyl"]
+[ext_resource type="Texture2D" uid="uid://bhiv0qvu0stpg" path="res://images/play_arrow_gray.png" id="19_g4cob"]
+[ext_resource type="Texture2D" uid="uid://dylfolyp2hv1t" path="res://images/skip_next_white.png" id="23_c00la"]
+[ext_resource type="Texture2D" uid="uid://dlsucafj1alws" path="res://images/skip_next_gray.png" id="24_4vn52"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
 texture = ExtResource("3_twduk")
@@ -277,6 +285,8 @@ offset_top = 770.0
 offset_right = 128.0
 offset_bottom = 818.0
 texture_normal = ExtResource("13_a0x5j")
+texture_pressed = ExtResource("14_yiam8")
+texture_disabled = ExtResource("15_mfw7a")
 
 [node name="Label" type="Label" parent="SkipPrevButton"]
 layout_mode = 0
@@ -293,6 +303,8 @@ offset_top = 770.0
 offset_right = 198.0
 offset_bottom = 818.0
 texture_normal = ExtResource("14_1awur")
+texture_pressed = ExtResource("15_cnqbk")
+texture_disabled = ExtResource("16_wq0v2")
 
 [node name="Label" type="Label" parent="BackwardButton"]
 layout_mode = 0
@@ -309,6 +321,8 @@ offset_top = 770.0
 offset_right = 268.0
 offset_bottom = 818.0
 texture_normal = ExtResource("15_2esqr")
+texture_pressed = ExtResource("18_qjqyl")
+texture_disabled = ExtResource("19_g4cob")
 
 [node name="Label" type="Label" parent="ForwardButton"]
 layout_mode = 0
@@ -325,6 +339,8 @@ offset_top = 770.0
 offset_right = 338.0
 offset_bottom = 818.0
 texture_normal = ExtResource("16_1mkmv")
+texture_pressed = ExtResource("23_c00la")
+texture_disabled = ExtResource("24_4vn52")
 
 [node name="Label" type="Label" parent="SkipNextButton"]
 layout_mode = 0
