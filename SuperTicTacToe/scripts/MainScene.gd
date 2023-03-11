@@ -440,7 +440,11 @@ func build_3x3_eval_table():
 		set_board3x3(ix);
 		g_eval_table[ix] = eval3x3(g_board3x3);
 		#print(g_eval_table[ix]);
-
+func update_next_mess():
+	if g_bd.next_color() == WHITE:
+		$MessLabel.text = "Ｏ の手番です。"
+	else:
+		$MessLabel.text = "☓ の手番です。"
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g_bd.put(x, y, g_bd.next_color())
 	#g_bd.print()
@@ -454,10 +458,7 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 			WHITE:	$MessLabel.text = "○ の勝ちです。"
 			BLACK:	$MessLabel.text = "☓ の勝ちです。"
 	else:
-		if g_bd.next_color() == WHITE:
-			$MessLabel.text = "Ｏ の手番です。"
-		else:
-			$MessLabel.text = "☓ の手番です。"
+		update_next_mess()
 	update_next_underline()
 	update_board_tilemaps()
 	update_nstone()
@@ -530,10 +531,7 @@ func _on_start_stop_button_pressed():
 		$StartStopButton.text = "■ Stop Game"
 		if g_bd.is_game_over():
 			init_board()
-		if g_bd.next_color() == WHITE:
-			$MessLabel.text = "Ｏ の手番です。"
-		else:
-			$MessLabel.text = "☓ の手番です。"
+		update_next_mess()
 	else:
 		if !g_bd.is_game_over():
 			$WhitePlayer/OptionButton.disabled = false
@@ -553,14 +551,6 @@ func _on_undo_button_pressed():
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_nstone()
-func _on_skip_prev_button_pressed():
-	while !g_bd.m_stack.is_empty():
-		g_bd.undo_put()
-	update_board_tilemaps()
-	update_next_underline()
-	update_nstone()
-	update_back_forward_buttons()
-	$StartStopButton.disabled = false
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
 	$SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
@@ -568,10 +558,20 @@ func update_back_forward_buttons():
 	$ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 	$SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 	$StartStopButton.disabled = false
+func _on_skip_prev_button_pressed():
+	while !g_bd.m_stack.is_empty():
+		g_bd.undo_put()
+	update_board_tilemaps()
+	update_next_mess()
+	update_next_underline()
+	update_nstone()
+	update_back_forward_buttons()
+	$StartStopButton.disabled = false
 func _on_backward_button_pressed():
 	if g_bd.m_stack.size() < 1: return
 	g_bd.undo_put()
 	update_board_tilemaps()
+	update_next_mess()
 	update_next_underline()
 	update_nstone()
 	update_back_forward_buttons()
