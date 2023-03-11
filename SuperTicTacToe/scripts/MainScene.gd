@@ -257,7 +257,7 @@ class Board:
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
 					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_beta(alpha, beta, depth-D)
+					var ev = alpha_beta(alpha, beta, depth-D) #*0.9999
 					undo_put()
 					if m_next_color == WHITE:
 						alpha = max(ev, alpha)
@@ -306,7 +306,7 @@ class Board:
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
 					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_beta(alpha, beta, DEPTH-D)
+					var ev = alpha_beta(alpha, beta, DEPTH-D) #*0.9999
 					undo_put()
 					if m_next_color == WHITE:
 						if ev > alpha:
@@ -371,7 +371,7 @@ func on_game_over():
 	$BlackPlayer/OptionButton.disabled = false
 	$InitButton.disabled = false
 	$StartStopButton.disabled = true
-	$StartStopButton.text = "▶ Start Game"
+	$StartStopButton.text = "▶ Cont. Game"
 	update_board_tilemaps()
 func update_next_underline():
 	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
@@ -553,12 +553,21 @@ func _on_undo_button_pressed():
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_nstone()
+func _on_skip_prev_button_pressed():
+	while !g_bd.m_stack.is_empty():
+		g_bd.undo_put()
+	update_board_tilemaps()
+	update_next_underline()
+	update_nstone()
+	update_back_forward_buttons()
+	$StartStopButton.disabled = false
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
 	$SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
 	$BackwardButton.disabled = game_started || g_bd.m_stack.is_empty()
 	$ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 	$SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
+	$StartStopButton.disabled = false
 func _on_backward_button_pressed():
 	if g_bd.m_stack.size() < 1: return
 	g_bd.undo_put()
@@ -572,13 +581,6 @@ func _on_forward_button_pressed():
 	#print("move_hist = ", move_hist)
 	var t = move_hist[g_bd.m_nput]
 	put_and_post_proc(t[0], t[1], true)
-func _on_skip_prev_button_pressed():
-	while !g_bd.m_stack.is_empty():
-		g_bd.undo_put()
-	update_board_tilemaps()
-	update_next_underline()
-	update_nstone()
-	update_back_forward_buttons()
 func _on_skip_next_button_pressed():
 	while move_hist.size() > g_bd.m_nput:
 		var t = move_hist[g_bd.m_nput]
