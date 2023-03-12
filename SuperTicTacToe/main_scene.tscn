@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=37 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -24,6 +24,8 @@
 [ext_resource type="Texture2D" uid="uid://bhiv0qvu0stpg" path="res://images/play_arrow_gray.png" id="19_g4cob"]
 [ext_resource type="Texture2D" uid="uid://dylfolyp2hv1t" path="res://images/skip_next_white.png" id="23_c00la"]
 [ext_resource type="Texture2D" uid="uid://dlsucafj1alws" path="res://images/skip_next_gray.png" id="24_4vn52"]
+[ext_resource type="Texture2D" uid="uid://dmkmge1c8wgcq" path="res://images/calculate_gray.png" id="25_3aeff"]
+[ext_resource type="Texture2D" uid="uid://dr4pgg4ldwr2m" path="res://images/calculate_blue.png" id="26_1778e"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
 texture = ExtResource("3_twduk")
@@ -192,7 +194,7 @@ layout_mode = 0
 offset_left = 50.0
 offset_right = 220.0
 offset_bottom = 51.0
-item_count = 6
+item_count = 7
 selected = 0
 popup/item_0/text = "Human"
 popup/item_0/id = 0
@@ -200,12 +202,14 @@ popup/item_1/text = "Random"
 popup/item_1/id = 1
 popup/item_2/text = "AI Depth 1"
 popup/item_2/id = 2
-popup/item_3/text = "AI Depth 3"
+popup/item_3/text = "AI Depth 2"
 popup/item_3/id = 3
-popup/item_4/text = "AI Depth 5"
+popup/item_4/text = "AI Depth 3"
 popup/item_4/id = 4
-popup/item_5/text = "AI Depth 7"
+popup/item_5/text = "AI Depth 4"
 popup/item_5/id = 5
+popup/item_6/text = "AI Depth 5"
+popup/item_6/id = 6
 
 [node name="TextureRect" type="TextureRect" parent="WhitePlayer"]
 layout_mode = 0
@@ -232,7 +236,7 @@ layout_mode = 0
 offset_left = 50.0
 offset_right = 220.0
 offset_bottom = 50.0
-item_count = 6
+item_count = 7
 selected = 0
 popup/item_0/text = "Human"
 popup/item_0/id = 0
@@ -240,12 +244,14 @@ popup/item_1/text = "Random"
 popup/item_1/id = 1
 popup/item_2/text = "AI Depth 1"
 popup/item_2/id = 2
-popup/item_3/text = "AI Depth 3"
+popup/item_3/text = "AI Depth 2"
 popup/item_3/id = 3
-popup/item_4/text = "AI Depth 5"
+popup/item_4/text = "AI Depth 3"
 popup/item_4/id = 4
-popup/item_5/text = "AI Depth 7"
+popup/item_5/text = "AI Depth 4"
 popup/item_5/id = 5
+popup/item_6/text = "AI Depth 5"
+popup/item_6/id = 6
 
 [node name="TextureRect" type="TextureRect" parent="BlackPlayer"]
 layout_mode = 0
@@ -351,6 +357,24 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "last"
 horizontal_alignment = 1
 
+[node name="PrintEvalButton" type="TextureButton" parent="."]
+offset_left = 439.0
+offset_top = 770.0
+offset_right = 487.0
+offset_bottom = 818.0
+toggle_mode = true
+texture_normal = ExtResource("25_3aeff")
+texture_pressed = ExtResource("26_1778e")
+
+[node name="Label" type="Label" parent="PrintEvalButton"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 48.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "eval"
+horizontal_alignment = 1
+
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
 [connection signal="pressed" from="InitButton" to="." method="_on_init_button_pressed"]
 [connection signal="item_selected" from="WhitePlayer/OptionButton" to="." method="_on_White_option_button_item_selected"]
@@ -360,3 +384,4 @@ horizontal_alignment = 1
 [connection signal="pressed" from="BackwardButton" to="." method="_on_backward_button_pressed"]
 [connection signal="pressed" from="ForwardButton" to="." method="_on_forward_button_pressed"]
 [connection signal="pressed" from="SkipNextButton" to="." method="_on_skip_next_button_pressed"]
+[connection signal="toggled" from="PrintEvalButton" to="." method="_on_print_eval_button_toggled"]

@@ -16,7 +16,7 @@ enum {
 	BLACK = -1, EMPTY, WHITE,				#	盤面石値、WHITE for 先手
 	#TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
 	TS_EMPTY = -1, TS_WHITE, TS_BLACK,		#	タイルセットID
-	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_3, AI_DEPTH_5, AI_DEPTH_7, 
+	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_2, AI_DEPTH_3, AI_DEPTH_4, AI_DEPTH_5, 
 }
 
 class HistItem:
@@ -475,10 +475,11 @@ func _process(delta):
 		#var pos = AI_think_random()
 		var typ = white_player if g_bd.next_color() == WHITE else black_player
 		var pos = (g_bd.select_random() if typ == AI_RANDOM else
-					g_bd.select_alpha_beta(1) if typ == AI_DEPTH_1 else
-					g_bd.select_alpha_beta(3) if typ == AI_DEPTH_3 else
-					g_bd.select_alpha_beta(5) if typ == AI_DEPTH_5 else
-					g_bd.select_alpha_beta(7))
+					g_bd.select_alpha_beta(typ - AI_RANDOM))
+					#g_bd.select_alpha_beta(1) if typ == AI_DEPTH_1 else
+					#g_bd.select_alpha_beta(3) if typ == AI_DEPTH_3 else
+					#g_bd.select_alpha_beta(5) if typ == AI_DEPTH_5 else
+					#g_bd.select_alpha_beta(7))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
 		put_and_post_proc(pos[0], pos[1], false)
@@ -585,3 +586,8 @@ func _on_skip_next_button_pressed():
 	while move_hist.size() > g_bd.m_nput:
 		var t = move_hist[g_bd.m_nput]
 		put_and_post_proc(t[0], t[1], true)
+
+
+func _on_print_eval_button_toggled(button_pressed):
+	print("button_pressed = ", button_pressed)
+	pass # Replace with function body.
