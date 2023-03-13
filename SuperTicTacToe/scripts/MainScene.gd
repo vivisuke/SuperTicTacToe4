@@ -338,6 +338,7 @@ var game_started = false		# ゲーム中か？
 var white_player = HUMAN
 var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
+var print_eval_ix = -1			# -1 for 非表示
 var move_hist = []				# 着手履歴
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
@@ -365,7 +366,7 @@ func build_eval_labels():
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
 			var lbl = Label.new()
-			lbl.text = "-9999"
+			lbl.text = ""
 			lbl.position = Vector2(x*51+25, y*51+35)
 			lbl.modulate = Color(1, 0, 0) # 赤色
 			$Board.add_child(lbl)
@@ -498,6 +499,13 @@ func _process(delta):
 		AI_thinking = false
 		if g_bd.is_game_over():
 			on_game_over()
+	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
+		if g_bd.is_empty(print_eval_ix%9, print_eval_ix/9):
+			g_bd.put(print_eval_ix%9, print_eval_ix/9, g_bd.next_color())
+			var ev = g_bd.alpha_beta(-2000, 2000, 3)
+			g_bd.undo_put()
+			g_eval_labels[print_eval_ix].text = "%d" % ev
+			print_eval_ix += 1
 	pass
 
 func _input(event):
@@ -597,8 +605,13 @@ func _on_skip_next_button_pressed():
 	while move_hist.size() > g_bd.m_nput:
 		var t = move_hist[g_bd.m_nput]
 		put_and_post_proc(t[0], t[1], true)
-
-
+func clear_eval_labels():
+	for i in range(g_eval_labels.size()):
+		g_eval_labels[i].text = ""
 func _on_print_eval_button_toggled(button_pressed):
 	print("button_pressed = ", button_pressed)
+	if button_pressed:
+		print_eval_ix = 0
+	else:
+		clear_eval_labels()
 	pass # Replace with function body.
