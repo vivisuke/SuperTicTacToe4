@@ -500,12 +500,25 @@ func _process(delta):
 		if g_bd.is_game_over():
 			on_game_over()
 	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
-		if g_bd.is_empty(print_eval_ix%9, print_eval_ix/9):
-			g_bd.put(print_eval_ix%9, print_eval_ix/9, g_bd.next_color())
-			var ev = g_bd.alpha_beta(-2000, 2000, 3)
-			g_bd.undo_put()
-			g_eval_labels[print_eval_ix].text = "%d" % ev
+		if g_bd.next_board() < 0:	# 全ローカルボードに着手可能
+			if g_bd.is_empty(print_eval_ix%9, print_eval_ix/9):
+				g_bd.put(print_eval_ix%9, print_eval_ix/9, g_bd.next_color())
+				var ev = g_bd.alpha_beta(-2000, 2000, 3)
+				g_bd.undo_put()
+				g_eval_labels[print_eval_ix].text = "%d" % ev
 			print_eval_ix += 1
+		else:	# g_bd.next_board() にのみ着手可能
+			var x0 = (g_bd.next_board() % 3) * 3
+			var y0 = (g_bd.next_board() / 3) * 3
+			var h = print_eval_ix % 3
+			var v = print_eval_ix / 3
+			if g_bd.is_empty(x0 + h, y0 + v):
+				g_bd.put(x0 + h, y0 + v, g_bd.next_color())
+				var ev = g_bd.alpha_beta(-2000, 2000, 3)
+				g_bd.undo_put()
+				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
+			print_eval_ix += 1
+			if print_eval_ix >= 9: print_eval_ix = -1
 	pass
 
 func _input(event):
