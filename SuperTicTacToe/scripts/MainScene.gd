@@ -342,6 +342,7 @@ var move_hist = []				# 着手履歴
 var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
+var g_eval_labels = []
 
 func _ready():
 	#rng.randomize()		# Setups a time-based seed
@@ -350,6 +351,7 @@ func _ready():
 	BOARD_ORG_Y = $Board/TileMapLocal.global_position.y
 	BOARD_ORG = Vector2(BOARD_ORG_X, BOARD_ORG_Y)
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
+	build_eval_labels()				# 各セルに評価値表示用ラベル設置
 	g_bd = Board.new()
 	g_bd.m_rng = rng
 	g_bd.set_eval_table(g_eval_table)
@@ -359,6 +361,15 @@ func _ready():
 	g_bd.print()
 	$MessLabel.text = "【Start Game】を押してください。"
 	pass
+func build_eval_labels():
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
+			var lbl = Label.new()
+			lbl.text = "-9999"
+			lbl.position = Vector2(x*51+25, y*51+35)
+			lbl.modulate = Color(1, 0, 0) # 赤色
+			$Board.add_child(lbl)
+			g_eval_labels.push_back(lbl)
 func init_board():
 	g_bd.init()
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
