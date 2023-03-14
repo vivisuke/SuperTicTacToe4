@@ -584,6 +584,10 @@ func _on_undo_button_pressed():
 	g_bd.undo_put()
 	update_board_tilemaps()
 	update_nstone()
+func update_eval_labels():
+	if $PrintEvalButton.pressed:
+		clear_eval_labels()
+		print_eval_ix = 0
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
 	$SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
@@ -591,7 +595,7 @@ func update_back_forward_buttons():
 	$ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 	$SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 	$StartStopButton.disabled = false
-func _on_skip_prev_button_pressed():
+func _on_skip_prev_button_pressed():	# 初手まで戻る
 	while !g_bd.m_stack.is_empty():
 		g_bd.undo_put()
 	update_board_tilemaps()
@@ -600,7 +604,8 @@ func _on_skip_prev_button_pressed():
 	update_nstone()
 	update_back_forward_buttons()
 	$StartStopButton.disabled = false
-func _on_backward_button_pressed():
+	update_eval_labels()
+func _on_backward_button_pressed():		# 戻る
 	if g_bd.m_stack.size() < 1: return
 	g_bd.undo_put()
 	update_board_tilemaps()
@@ -609,15 +614,18 @@ func _on_backward_button_pressed():
 	update_nstone()
 	update_back_forward_buttons()
 	#print("move_hist = ", move_hist)
-func _on_forward_button_pressed():
+	update_eval_labels()
+func _on_forward_button_pressed():		# 進める
 	if move_hist.size() <= g_bd.m_nput: return
 	#print("move_hist = ", move_hist)
 	var t = move_hist[g_bd.m_nput]
 	put_and_post_proc(t[0], t[1], true)
-func _on_skip_next_button_pressed():
+	update_eval_labels()
+func _on_skip_next_button_pressed():	# 最後まで進める
 	while move_hist.size() > g_bd.m_nput:
 		var t = move_hist[g_bd.m_nput]
 		put_and_post_proc(t[0], t[1], true)
+	update_eval_labels()
 func clear_eval_labels():
 	for i in range(g_eval_labels.size()):
 		g_eval_labels[i].text = ""
