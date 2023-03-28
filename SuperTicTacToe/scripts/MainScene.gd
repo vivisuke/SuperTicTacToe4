@@ -532,7 +532,7 @@ func _process(delta):
 
 func _input(event):
 	if !game_started: return
-	if event is InputEventMouseButton:
+	if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT:
 		#print(event.position)
 		#print($Board/TileMapLocal.local_to_map(event.position - BOARD_ORG))
 		var pos = $Board/TileMapLocal.local_to_map(event.position - BOARD_ORG)
