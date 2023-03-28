@@ -106,6 +106,14 @@ text = "Super Tic-Tac-Toe"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="VerLabel" type="Label" parent="TitleBar"]
+layout_mode = 0
+offset_left = 387.0
+offset_right = 500.0
+offset_bottom = 42.0
+text = "ver 0.001"
+vertical_alignment = 2
+
 [node name="StartStopButton" type="Button" parent="."]
 anchors_preset = -1
 anchor_left = 0.058
