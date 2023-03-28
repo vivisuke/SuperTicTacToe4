@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=41 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -27,6 +27,8 @@
 [ext_resource type="Texture2D" uid="uid://dmkmge1c8wgcq" path="res://images/calculate_gray.png" id="25_3aeff"]
 [ext_resource type="Texture2D" uid="uid://dr4pgg4ldwr2m" path="res://images/calculate_blue.png" id="26_1778e"]
 [ext_resource type="Shader" path="res://main_scene.gdshader" id="27_pqj7x"]
+[ext_resource type="Texture2D" uid="uid://dlvmybytw1evg" path="res://images/rule_black.png" id="27_tcd3h"]
+[ext_resource type="Texture2D" uid="uid://dj0y1k44oaxaw" path="res://images/rule_white.png" id="28_kre8h"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
 texture = ExtResource("3_twduk")
@@ -294,9 +296,9 @@ texture_disabled = ExtResource("12_wvgq7")
 
 [node name="Label" type="Label" parent="UndoButton"]
 layout_mode = 0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 48.0
-offset_bottom = 59.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "undo"
 horizontal_alignment = 1
@@ -312,9 +314,9 @@ texture_disabled = ExtResource("15_mfw7a")
 
 [node name="Label" type="Label" parent="SkipPrevButton"]
 layout_mode = 0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 48.0
-offset_bottom = 59.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "first"
 horizontal_alignment = 1
@@ -330,9 +332,9 @@ texture_disabled = ExtResource("16_wq0v2")
 
 [node name="Label" type="Label" parent="BackwardButton"]
 layout_mode = 0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 48.0
-offset_bottom = 59.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "back"
 horizontal_alignment = 1
@@ -348,9 +350,9 @@ texture_disabled = ExtResource("19_g4cob")
 
 [node name="Label" type="Label" parent="ForwardButton"]
 layout_mode = 0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 48.0
-offset_bottom = 59.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "fwd"
 horizontal_alignment = 1
@@ -366,17 +368,17 @@ texture_disabled = ExtResource("24_4vn52")
 
 [node name="Label" type="Label" parent="SkipNextButton"]
 layout_mode = 0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 48.0
-offset_bottom = 59.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "last"
 horizontal_alignment = 1
 
 [node name="PrintEvalButton" type="TextureButton" parent="."]
-offset_left = 439.0
+offset_left = 360.0
 offset_top = 770.0
-offset_right = 487.0
+offset_right = 408.0
 offset_bottom = 818.0
 toggle_mode = true
 texture_normal = ExtResource("25_3aeff")
@@ -384,11 +386,28 @@ texture_pressed = ExtResource("26_1778e")
 
 [node name="Label" type="Label" parent="PrintEvalButton"]
 layout_mode = 0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 48.0
-offset_bottom = 59.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "eval"
+horizontal_alignment = 1
+
+[node name="RuleButton" type="TextureButton" parent="."]
+offset_left = 430.0
+offset_top = 770.0
+offset_right = 478.0
+offset_bottom = 818.0
+texture_normal = ExtResource("27_tcd3h")
+texture_pressed = ExtResource("28_kre8h")
+
+[node name="Label" type="Label" parent="RuleButton"]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 48.0
+offset_bottom = 66.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "rule"
 horizontal_alignment = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -410,3 +429,4 @@ color = Color(1, 1, 1, 0)
 [connection signal="pressed" from="ForwardButton" to="." method="_on_forward_button_pressed"]
 [connection signal="pressed" from="SkipNextButton" to="." method="_on_skip_next_button_pressed"]
 [connection signal="toggled" from="PrintEvalButton" to="." method="_on_print_eval_button_toggled"]
+[connection signal="pressed" from="RuleButton" to="." method="_on_rule_button_pressed"]

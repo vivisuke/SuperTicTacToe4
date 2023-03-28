@@ -645,3 +645,7 @@ func _on_print_eval_button_toggled(button_pressed):
 	else:
 		clear_eval_labels()
 	pass # Replace with function body.
+
+func _on_rule_button_pressed():
+	get_tree().change_scene_to_file("res://rule_scene.tscn")
+	pass # Replace with function body.
