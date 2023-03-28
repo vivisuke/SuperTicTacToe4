@@ -344,6 +344,7 @@ var g_bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 var g_eval_labels = []
+var shock_wave_timer = -1
 
 func _ready():
 	#rng.randomize()		# Setups a time-based seed
@@ -361,6 +362,7 @@ func _ready():
 	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
 	g_bd.print()
 	$MessLabel.text = "【Start Game】を押してください。"
+	$CanvasLayer/ColorRect.material.set("shader_param/size", 0)
 	pass
 func build_eval_labels():
 	for y in range(N_VERT):
@@ -385,6 +387,8 @@ func on_game_over():
 	$StartStopButton.disabled = true
 	$StartStopButton.text = "▶ Cont. Game"
 	update_board_tilemaps()
+	$CanvasLayer/ColorRect.show()
+	shock_wave_timer = 0.0      # start shock wave
 func update_next_underline():
 	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
 	$BlackPlayer/Underline.visible = game_started && g_bd.next_color() == BLACK
@@ -519,6 +523,11 @@ func _process(delta):
 				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
 			print_eval_ix += 1
 			if print_eval_ix >= 9: print_eval_ix = -1
+	if shock_wave_timer >= 0:
+		shock_wave_timer += delta
+		$CanvasLayer/ColorRect.material.set("shader_param/size", shock_wave_timer)
+		if shock_wave_timer > 2:
+			shock_wave_timer = -1.0
 	pass
 
 func _input(event):
