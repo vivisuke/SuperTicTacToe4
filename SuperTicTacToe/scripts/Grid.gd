@@ -30,8 +30,8 @@ func _draw():
 	for x in range(1, N_HORZ):
 		var wd = 3 if x%3 == 0 else 1
 		draw_line(Vector2(FRAME_WD+x*CELL_WD, FRAME_WD), 
-					Vector2(FRAME_WD+x*CELL_WD, FRAME_WD+CELL_WD*N_VERT), 
+					Vector2(FRAME_WD+x*CELL_WD, FRAME_WD+CELL_WD*N_VERT+1), 
 					Color.BLACK, wd)
 		draw_line(Vector2(FRAME_WD, FRAME_WD+x*CELL_WD), 
-					Vector2(FRAME_WD+CELL_WD*N_HORZ, FRAME_WD+x*CELL_WD), 
+					Vector2(FRAME_WD+CELL_WD*N_HORZ+1, FRAME_WD+x*CELL_WD), 
 					Color.BLACK, wd)
