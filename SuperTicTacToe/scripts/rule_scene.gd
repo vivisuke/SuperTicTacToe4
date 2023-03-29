@@ -2,6 +2,7 @@ extends Node2D
 
 var page = 0;			# 
 var pict = []
+var page_buttons = []
 
 var rule_text = [
 	"Super Tic-Tac-Toe（超三目並べ）は, 小さい盤面（ローカルボード）に○☓ を交互に打っていき, 大きい盤面（グローバルボード）で先に三目並びを作った方が勝ちのゲームです。",
@@ -15,6 +16,7 @@ func _ready():
 	pict = [ $BGRect/SpriteWhiteWon, $BGRect/SpriteMake3, $BGRect/SpriteNextBoard, ]
 	#pict.resize(rule_text.size())
 	#pict[0] = get_node("SpriteWhiteWon")
+	page_buttons = [ $Page1Button, $Page2Button, $Page3Button, ]
 	update_pict_text_buttons()
 	pass # Replace with function body.
 
@@ -25,6 +27,7 @@ func update_pict_text_buttons():
 		else:
 			pict[i].hide()
 		#pict[i].visible = i == page
+		page_buttons[i].button_pressed = i == page
 	$RuleLabel.text = rule_text[page]
 	$PrevButton.disabled = page == 0
 	$NextButton.disabled = page == rule_text.size() - 1

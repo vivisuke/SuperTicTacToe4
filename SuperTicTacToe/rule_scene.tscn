@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://3430qkiifdud"]
+[gd_scene load_steps=16 format=3 uid="uid://3430qkiifdud"]
 
 [ext_resource type="Script" path="res://scripts/rule_scene.gd" id="1_j7eu0"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_xxjgr"]
@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://cc5d6aleorq3n" path="res://images/navigate_next_black.png" id="10_wes61"]
 [ext_resource type="Texture2D" uid="uid://2ifgglcpw8gb" path="res://images/navigate_before_gray.png" id="11_irpas"]
 [ext_resource type="Texture2D" uid="uid://4gqmgx41qksu" path="res://images/navigate_next_white.png" id="13_pq2n6"]
+[ext_resource type="Texture2D" uid="uid://c85kr7wnerdyh" path="res://images/dot_black.png" id="14_ntpfu"]
+[ext_resource type="Texture2D" uid="uid://cuk1oeaxa8l5u" path="res://images/dot_orange.png" id="15_pc72f"]
 
 [node name="RuleScene" type="Node2D"]
 script = ExtResource("1_j7eu0")
@@ -115,6 +117,33 @@ offset_bottom = 66.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "next"
 horizontal_alignment = 1
+
+[node name="Page1Button" type="TextureButton" parent="."]
+offset_left = 131.0
+offset_top = 789.0
+offset_right = 179.0
+offset_bottom = 837.0
+toggle_mode = true
+texture_normal = ExtResource("14_ntpfu")
+texture_pressed = ExtResource("15_pc72f")
+
+[node name="Page2Button" type="TextureButton" parent="."]
+offset_left = 226.0
+offset_top = 789.0
+offset_right = 274.0
+offset_bottom = 837.0
+toggle_mode = true
+texture_normal = ExtResource("14_ntpfu")
+texture_pressed = ExtResource("15_pc72f")
+
+[node name="Page3Button" type="TextureButton" parent="."]
+offset_left = 321.0
+offset_top = 789.0
+offset_right = 369.0
+offset_bottom = 837.0
+toggle_mode = true
+texture_normal = ExtResource("14_ntpfu")
+texture_pressed = ExtResource("15_pc72f")
 
 [connection signal="pressed" from="TitleBar/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="PrevButton" to="." method="_on_prev_button_pressed"]
