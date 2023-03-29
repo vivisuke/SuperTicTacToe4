@@ -21,6 +21,7 @@ func _ready():
 	pass # Replace with function body.
 
 func update_pict_text_buttons():
+	$PageLabel.text = "%d/%d" % [page+1, pict.size()]
 	for i in pict.size():
 		if i == page:
 			pict[i].show()

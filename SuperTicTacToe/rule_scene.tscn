@@ -46,6 +46,15 @@ text = "Super Tic-Tac-Toe Rule"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PageLabel" type="Label" parent="."]
+offset_top = 66.0
+offset_right = 500.0
+offset_bottom = 92.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "1/3"
+horizontal_alignment = 1
+
 [node name="BGRect" type="ColorRect" parent="."]
 offset_left = 10.0
 offset_top = 110.0
