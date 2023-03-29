@@ -71,9 +71,9 @@ texture = ExtResource("8_h2clv")
 
 [node name="RuleLabel" type="Label" parent="."]
 offset_left = 10.0
-offset_top = 650.0
+offset_top = 620.0
 offset_right = 490.0
-offset_bottom = 800.0
+offset_bottom = 770.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "Super Tic-Tac-Toe（超三目並べ）は、○☓ を交互に打っていき、大きい盤面で先に三目並べた方が勝ちのゲームです。
@@ -117,3 +117,5 @@ text = "next"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="TitleBar/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="PrevButton" to="." method="_on_prev_button_pressed"]
+[connection signal="pressed" from="NextButton" to="." method="_on_next_button_pressed"]

@@ -1,5 +1,7 @@
 extends Node2D
 
+var page = 0;			# 
+var pict = []
 
 var rule_text = [
 	"Super Tic-Tac-Toe（超三目並べ）は、小さい盤面（ローカルボード）に○☓ を交互に打っていき、大きい盤面（グローバルボード）で先に三目並べた方が勝ちのゲームです。",
@@ -9,9 +11,21 @@ var rule_text = [
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$RuleLabel.text = rule_text[2]
+	pict = [ $BGRect/SpriteWhiteWon, $BGRect/SpriteMake3, $BGRect/SpriteNextBoard, ]
+	#pict.resize(rule_text.size())
+	#pict[0] = get_node("SpriteWhiteWon")
+	update_pict_text_buttons()
 	pass # Replace with function body.
 
+func update_pict_text_buttons():
+	for i in pict.size():
+		if i == page:
+			pict[i].show()
+		else:
+			pict[i].hide()
+		#pict[i].visible = i == page
+	$RuleLabel.text = rule_text[page]
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -20,4 +34,18 @@ func _process(delta):
 
 func _on_back_button_pressed():
 	get_tree().change_scene_to_file("res://main_scene.tscn")
+	pass # Replace with function body.
+
+
+func _on_prev_button_pressed():
+	if page != 0:
+		page -= 1
+		update_pict_text_buttons()
+	pass # Replace with function body.
+
+
+func _on_next_button_pressed():
+	if page != rule_text.size() - 1:
+		page += 1
+		update_pict_text_buttons()
 	pass # Replace with function body.
