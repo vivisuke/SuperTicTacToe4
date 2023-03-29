@@ -36,22 +36,28 @@ func update_pict_text_buttons():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
-
-
 func _on_back_button_pressed():
 	get_tree().change_scene_to_file("res://main_scene.tscn")
 	pass # Replace with function body.
-
-
 func _on_prev_button_pressed():
 	if page != 0:
 		page -= 1
 		update_pict_text_buttons()
 	pass # Replace with function body.
-
-
 func _on_next_button_pressed():
 	if page != rule_text.size() - 1:
 		page += 1
 		update_pict_text_buttons()
+	pass # Replace with function body.
+func _on_page1_button_pressed():
+	page = 0
+	update_pict_text_buttons()
+	pass # Replace with function body.
+func _on_page2_button_pressed():
+	page = 1
+	update_pict_text_buttons()
+	pass # Replace with function body.
+func _on_page3_button_pressed():
+	page = 2
+	update_pict_text_buttons()
 	pass # Replace with function body.

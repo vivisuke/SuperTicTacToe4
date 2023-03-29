@@ -148,3 +148,6 @@ texture_pressed = ExtResource("15_pc72f")
 [connection signal="pressed" from="TitleBar/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="PrevButton" to="." method="_on_prev_button_pressed"]
 [connection signal="pressed" from="NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="Page1Button" to="." method="_on_page1_button_pressed"]
+[connection signal="pressed" from="Page2Button" to="." method="_on_page2_button_pressed"]
+[connection signal="pressed" from="Page3Button" to="." method="_on_page3_button_pressed"]
