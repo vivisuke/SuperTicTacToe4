@@ -380,6 +380,7 @@ func init_board():
 	$NStoneLabel.text = "#1 (spc: 81)"
 	$MessLabel.text = "【Start Game】を押してください。"
 func on_game_over():
+	print("on_game_over()")
 	game_started = false
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
@@ -528,6 +529,7 @@ func _process(delta):
 		$CanvasLayer/ColorRect.material.set("shader_param/size", shock_wave_timer)
 		if shock_wave_timer > 2:
 			shock_wave_timer = -1.0
+			$CanvasLayer/ColorRect.hide()
 	pass
 
 func _input(event):
