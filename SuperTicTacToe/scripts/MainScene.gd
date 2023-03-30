@@ -560,6 +560,7 @@ func _on_init_button_pressed():
 	$BlackPlayer/OptionButton.disabled = false
 	$StartStopButton.disabled = false
 	$StartStopButton.text = "▶ Start Game"
+	clear_eval_labels()
 	init_board()
 	pass # Replace with function body.
 
