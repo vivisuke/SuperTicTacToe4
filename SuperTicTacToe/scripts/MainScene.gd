@@ -282,9 +282,10 @@ class Board:
 		#bd.set_eval(g_eval)
 		#bd.copy(self)
 		#var DEPTH = 3
-		if m_nput >= 9*2: DEPTH += 1
-		if m_nput >= 9*4: DEPTH += 1
-		if m_nput >= 9*6: DEPTH += 1
+		if DEPTH > 2:
+			if m_nput >= 9*2: DEPTH += 1
+			if m_nput >= 9*4: DEPTH += 1
+			if m_nput >= 9*6: DEPTH += 1
 		var ps;
 		var alpha = -99999
 		var beta = 99999
@@ -493,10 +494,6 @@ func _process(delta):
 		var typ = white_player if g_bd.next_color() == WHITE else black_player
 		var pos = (g_bd.select_random() if typ == AI_RANDOM else
 					g_bd.select_alpha_beta(typ - AI_RANDOM))
-					#g_bd.select_alpha_beta(1) if typ == AI_DEPTH_1 else
-					#g_bd.select_alpha_beta(3) if typ == AI_DEPTH_3 else
-					#g_bd.select_alpha_beta(5) if typ == AI_DEPTH_5 else
-					#g_bd.select_alpha_beta(7))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
 		put_and_post_proc(pos[0], pos[1], false)
@@ -573,6 +570,7 @@ func _on_start_stop_button_pressed():
 		$BlackPlayer/OptionButton.disabled = true
 		$InitButton.disabled = true
 		$StartStopButton.text = "■ Stop Game"
+		clear_eval_labels()
 		if g_bd.is_game_over():
 			init_board()
 		update_next_mess()
