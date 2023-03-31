@@ -114,7 +114,7 @@ layout_mode = 0
 offset_left = 387.0
 offset_right = 500.0
 offset_bottom = 42.0
-text = "ver 0.001"
+text = "ver 0.002"
 vertical_alignment = 2
 
 [node name="StartStopButton" type="Button" parent="."]
