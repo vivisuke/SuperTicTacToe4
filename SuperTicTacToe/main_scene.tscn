@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=42 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://dkfrewd5wfyl6" path="res://images/undo_white.png" id="11_uycg4"]
 [ext_resource type="Texture2D" uid="uid://cmfrivkhav2n" path="res://images/undo_gray.png" id="12_wvgq7"]
 [ext_resource type="Texture2D" uid="uid://dady7pp3p6kkf" path="res://images/skip_previous_black.png" id="13_a0x5j"]
+[ext_resource type="Texture2D" uid="uid://5b15fe37rgjf" path="res://images/empty24.png" id="13_xkyjp"]
 [ext_resource type="Texture2D" uid="uid://cw4lcq3gm4ekr" path="res://images/back_arrow_black.png" id="14_1awur"]
 [ext_resource type="Texture2D" uid="uid://55hldeslrodu" path="res://images/skip_previous_white.png" id="14_yiam8"]
 [ext_resource type="Texture2D" uid="uid://bl6wqrnma71iw" path="res://images/play_arrow_black.png" id="15_2esqr"]
@@ -24,8 +25,6 @@
 [ext_resource type="Texture2D" uid="uid://bhiv0qvu0stpg" path="res://images/play_arrow_gray.png" id="19_g4cob"]
 [ext_resource type="Texture2D" uid="uid://dylfolyp2hv1t" path="res://images/skip_next_white.png" id="23_c00la"]
 [ext_resource type="Texture2D" uid="uid://dlsucafj1alws" path="res://images/skip_next_gray.png" id="24_4vn52"]
-[ext_resource type="Texture2D" uid="uid://dmkmge1c8wgcq" path="res://images/calculate_gray.png" id="25_3aeff"]
-[ext_resource type="Texture2D" uid="uid://dr4pgg4ldwr2m" path="res://images/calculate_blue.png" id="26_1778e"]
 [ext_resource type="Shader" path="res://main_scene.gdshader" id="27_pqj7x"]
 [ext_resource type="Texture2D" uid="uid://dlvmybytw1evg" path="res://images/rule_black.png" id="27_tcd3h"]
 [ext_resource type="Texture2D" uid="uid://dj0y1k44oaxaw" path="res://images/rule_white.png" id="28_kre8h"]
@@ -287,16 +286,19 @@ offset_right = 220.0
 offset_bottom = 60.0
 color = Color(1, 1, 0, 1)
 
-[node name="UndoButton" type="TextureButton" parent="."]
-offset_left = 10.0
-offset_top = 770.0
-offset_right = 58.0
-offset_bottom = 818.0
+[node name="HBC" type="HBoxContainer" parent="."]
+offset_top = 775.0
+offset_right = 500.0
+offset_bottom = 815.0
+alignment = 1
+
+[node name="UndoButton" type="TextureButton" parent="HBC"]
+layout_mode = 2
 texture_normal = ExtResource("10_kv7xa")
 texture_pressed = ExtResource("11_uycg4")
 texture_disabled = ExtResource("12_wvgq7")
 
-[node name="Label" type="Label" parent="UndoButton"]
+[node name="Label" type="Label" parent="HBC/UndoButton"]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 48.0
@@ -305,16 +307,17 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "undo"
 horizontal_alignment = 1
 
-[node name="SkipPrevButton" type="TextureButton" parent="."]
-offset_left = 80.0
-offset_top = 770.0
-offset_right = 128.0
-offset_bottom = 818.0
+[node name="Spacer1" type="TextureRect" parent="HBC"]
+layout_mode = 2
+texture = ExtResource("13_xkyjp")
+
+[node name="SkipPrevButton" type="TextureButton" parent="HBC"]
+layout_mode = 2
 texture_normal = ExtResource("13_a0x5j")
 texture_pressed = ExtResource("14_yiam8")
 texture_disabled = ExtResource("15_mfw7a")
 
-[node name="Label" type="Label" parent="SkipPrevButton"]
+[node name="Label" type="Label" parent="HBC/SkipPrevButton"]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 48.0
@@ -323,16 +326,17 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "first"
 horizontal_alignment = 1
 
-[node name="BackwardButton" type="TextureButton" parent="."]
-offset_left = 150.0
-offset_top = 770.0
-offset_right = 198.0
-offset_bottom = 818.0
+[node name="Spacer2" type="TextureRect" parent="HBC"]
+layout_mode = 2
+texture = ExtResource("13_xkyjp")
+
+[node name="BackwardButton" type="TextureButton" parent="HBC"]
+layout_mode = 2
 texture_normal = ExtResource("14_1awur")
 texture_pressed = ExtResource("15_cnqbk")
 texture_disabled = ExtResource("16_wq0v2")
 
-[node name="Label" type="Label" parent="BackwardButton"]
+[node name="Label" type="Label" parent="HBC/BackwardButton"]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 48.0
@@ -341,16 +345,17 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "back"
 horizontal_alignment = 1
 
-[node name="ForwardButton" type="TextureButton" parent="."]
-offset_left = 220.0
-offset_top = 770.0
-offset_right = 268.0
-offset_bottom = 818.0
+[node name="Spacer3" type="TextureRect" parent="HBC"]
+layout_mode = 2
+texture = ExtResource("13_xkyjp")
+
+[node name="ForwardButton" type="TextureButton" parent="HBC"]
+layout_mode = 2
 texture_normal = ExtResource("15_2esqr")
 texture_pressed = ExtResource("18_qjqyl")
 texture_disabled = ExtResource("19_g4cob")
 
-[node name="Label" type="Label" parent="ForwardButton"]
+[node name="Label" type="Label" parent="HBC/ForwardButton"]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 48.0
@@ -359,16 +364,17 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "fwd"
 horizontal_alignment = 1
 
-[node name="SkipNextButton" type="TextureButton" parent="."]
-offset_left = 290.0
-offset_top = 770.0
-offset_right = 338.0
-offset_bottom = 818.0
+[node name="Spacer4" type="TextureRect" parent="HBC"]
+layout_mode = 2
+texture = ExtResource("13_xkyjp")
+
+[node name="SkipNextButton" type="TextureButton" parent="HBC"]
+layout_mode = 2
 texture_normal = ExtResource("16_1mkmv")
 texture_pressed = ExtResource("23_c00la")
 texture_disabled = ExtResource("24_4vn52")
 
-[node name="Label" type="Label" parent="SkipNextButton"]
+[node name="Label" type="Label" parent="HBC/SkipNextButton"]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 48.0
@@ -377,33 +383,16 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "last"
 horizontal_alignment = 1
 
-[node name="PrintEvalButton" type="TextureButton" parent="."]
-offset_left = 360.0
-offset_top = 770.0
-offset_right = 408.0
-offset_bottom = 818.0
-toggle_mode = true
-texture_normal = ExtResource("25_3aeff")
-texture_pressed = ExtResource("26_1778e")
+[node name="Spacer5" type="TextureRect" parent="HBC"]
+layout_mode = 2
+texture = ExtResource("13_xkyjp")
 
-[node name="Label" type="Label" parent="PrintEvalButton"]
-layout_mode = 0
-offset_top = 40.0
-offset_right = 48.0
-offset_bottom = 66.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "eval"
-horizontal_alignment = 1
-
-[node name="RuleButton" type="TextureButton" parent="."]
-offset_left = 430.0
-offset_top = 770.0
-offset_right = 478.0
-offset_bottom = 818.0
+[node name="RuleButton" type="TextureButton" parent="HBC"]
+layout_mode = 2
 texture_normal = ExtResource("27_tcd3h")
 texture_pressed = ExtResource("28_kre8h")
 
-[node name="Label" type="Label" parent="RuleButton"]
+[node name="Label" type="Label" parent="HBC/RuleButton"]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 48.0
@@ -433,10 +422,9 @@ stream = ExtResource("31_7ma7b")
 [connection signal="pressed" from="InitButton" to="." method="_on_init_button_pressed"]
 [connection signal="item_selected" from="WhitePlayer/OptionButton" to="." method="_on_White_option_button_item_selected"]
 [connection signal="item_selected" from="BlackPlayer/OptionButton" to="." method="_on_Black_option_button_item_selected"]
-[connection signal="pressed" from="UndoButton" to="." method="_on_undo_button_pressed"]
-[connection signal="pressed" from="SkipPrevButton" to="." method="_on_skip_prev_button_pressed"]
-[connection signal="pressed" from="BackwardButton" to="." method="_on_backward_button_pressed"]
-[connection signal="pressed" from="ForwardButton" to="." method="_on_forward_button_pressed"]
-[connection signal="pressed" from="SkipNextButton" to="." method="_on_skip_next_button_pressed"]
-[connection signal="toggled" from="PrintEvalButton" to="." method="_on_print_eval_button_toggled"]
-[connection signal="pressed" from="RuleButton" to="." method="_on_rule_button_pressed"]
+[connection signal="pressed" from="HBC/UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="HBC/SkipPrevButton" to="." method="_on_skip_prev_button_pressed"]
+[connection signal="pressed" from="HBC/BackwardButton" to="." method="_on_backward_button_pressed"]
+[connection signal="pressed" from="HBC/ForwardButton" to="." method="_on_forward_button_pressed"]
+[connection signal="pressed" from="HBC/SkipNextButton" to="." method="_on_skip_next_button_pressed"]
+[connection signal="pressed" from="HBC/RuleButton" to="." method="_on_rule_button_pressed"]

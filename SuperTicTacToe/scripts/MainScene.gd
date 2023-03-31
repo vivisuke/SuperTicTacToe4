@@ -609,15 +609,15 @@ func _on_undo_button_pressed():
 	update_board_tilemaps()
 	update_nstone()
 func update_eval_labels():
-	if $PrintEvalButton.pressed:
+	#if $PrintEvalButton.pressed:
 		clear_eval_labels()
 		print_eval_ix = 0
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
-	$SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
-	$BackwardButton.disabled = game_started || g_bd.m_stack.is_empty()
-	$ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
-	$SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
+	$HBC/SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
+	$HBC/BackwardButton.disabled = game_started || g_bd.m_stack.is_empty()
+	$HBC/ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
+	$HBC/SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
 	$StartStopButton.disabled = false
 func _on_skip_prev_button_pressed():	# 初手まで戻る
 	while !g_bd.m_stack.is_empty():
