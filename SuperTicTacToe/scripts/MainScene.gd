@@ -501,6 +501,7 @@ func _process(delta):
 	elif( game_started && !AI_thinking &&
 			(g_bd.next_color() == WHITE && white_player >= AI_RANDOM ||
 			g_bd.next_color() == BLACK && black_player >= AI_RANDOM) ):
+		# AI の手番
 		#if !game_started:
 		#	print("??? game_started = ", game_started)
 		AI_thinking = true
@@ -516,6 +517,7 @@ func _process(delta):
 		if g_bd.is_game_over():
 			on_game_over()
 	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
+		# 空欄に評価値を表示
 		if g_bd.next_board() < 0:	# 全ローカルボードに着手可能
 			if g_bd.is_empty(print_eval_ix%9, print_eval_ix/9):
 				g_bd.put(print_eval_ix%9, print_eval_ix/9, g_bd.next_color())
@@ -523,6 +525,8 @@ func _process(delta):
 				g_bd.undo_put()
 				g_eval_labels[print_eval_ix].text = "%d" % ev
 			print_eval_ix += 1
+			if print_eval_ix >= N_HORZ*N_VERT:
+				print_eval_ix = -1
 		else:	# g_bd.next_board() にのみ着手可能
 			var x0 = (g_bd.next_board() % 3) * 3
 			var y0 = (g_bd.next_board() / 3) * 3
@@ -534,7 +538,8 @@ func _process(delta):
 				g_bd.undo_put()
 				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
 			print_eval_ix += 1
-			if print_eval_ix >= 9: print_eval_ix = -1
+			if print_eval_ix >= 9:
+				print_eval_ix = -1
 	if shock_wave_timer >= 0:
 		shock_wave_timer += delta
 		$CanvasLayer/ColorRect.material.set("shader_param/size", shock_wave_timer)
