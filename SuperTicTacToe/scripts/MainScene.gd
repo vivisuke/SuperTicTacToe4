@@ -481,7 +481,7 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 		move_hist.resize(g_bd.m_nput-1)
 		move_hist.push_back([x, y])
 	if g_bd.is_game_over():
-		$AudioKirakira.play()
+		$Audio/Kirakira.play()
 		game_started = false
 		match g_bd.winner():
 			EMPTY:	$MessLabel.text = "引き分けです。"
@@ -489,7 +489,7 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 			BLACK:	$MessLabel.text = "☓ の勝ちです。"
 	else:
 		if g_bd.m_linedup:		# ローカルボード内で三目並んだ
-			$AudioDon.play()		# 効果音
+			$Audio/Don.play()		# 効果音
 		update_next_mess()
 	update_next_underline()
 	update_board_tilemaps()

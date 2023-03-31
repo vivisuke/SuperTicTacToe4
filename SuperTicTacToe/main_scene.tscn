@@ -410,11 +410,13 @@ offset_right = 500.0
 offset_bottom = 900.0
 color = Color(1, 1, 1, 0)
 
-[node name="AudioDon" type="AudioStreamPlayer2D" parent="."]
+[node name="Audio" type="Node" parent="."]
+
+[node name="Don" type="AudioStreamPlayer2D" parent="Audio"]
 position = Vector2(250, 450)
 stream = ExtResource("30_w5sgk")
 
-[node name="AudioKirakira" type="AudioStreamPlayer2D" parent="."]
+[node name="Kirakira" type="AudioStreamPlayer2D" parent="Audio"]
 position = Vector2(250, 450)
 stream = ExtResource("31_7ma7b")
 
