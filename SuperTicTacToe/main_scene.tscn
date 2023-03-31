@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=43 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -30,6 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://dlvmybytw1evg" path="res://images/rule_black.png" id="27_tcd3h"]
 [ext_resource type="Texture2D" uid="uid://dj0y1k44oaxaw" path="res://images/rule_white.png" id="28_kre8h"]
 [ext_resource type="AudioStream" uid="uid://dff6mt3wexrw0" path="res://sounds/don.mp3" id="30_w5sgk"]
+[ext_resource type="AudioStream" uid="uid://c2pp036ka0rvh" path="res://sounds/kirakira-3.mp3" id="31_7ma7b"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_30j05"]
 texture = ExtResource("3_twduk")
@@ -423,6 +424,10 @@ color = Color(1, 1, 1, 0)
 [node name="AudioDon" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(250, 450)
 stream = ExtResource("30_w5sgk")
+
+[node name="AudioKirakira" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(250, 450)
+stream = ExtResource("31_7ma7b")
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
 [connection signal="pressed" from="InitButton" to="." method="_on_init_button_pressed"]

@@ -476,19 +476,20 @@ func update_next_mess():
 		$MessLabel.text = "☓ の手番です。"
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g_bd.put(x, y, g_bd.next_color())
-	if g_bd.m_linedup:		# ローカルボード内で三目並んだ
-		$AudioDon.play()		# 効果音
 	#g_bd.print()
 	if !replay:
 		move_hist.resize(g_bd.m_nput-1)
 		move_hist.push_back([x, y])
 	if g_bd.is_game_over():
+		$AudioKirakira.play()
 		game_started = false
 		match g_bd.winner():
 			EMPTY:	$MessLabel.text = "引き分けです。"
 			WHITE:	$MessLabel.text = "○ の勝ちです。"
 			BLACK:	$MessLabel.text = "☓ の勝ちです。"
 	else:
+		if g_bd.m_linedup:		# ローカルボード内で三目並んだ
+			$AudioDon.play()		# 効果音
 		update_next_mess()
 	update_next_underline()
 	update_board_tilemaps()
