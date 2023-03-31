@@ -35,6 +35,7 @@ class Board:
 	var m_winner				# 勝者
 	var m_next_board = -1		# 着手可能ローカルボード [0, 9)、-1 for 全ローカルボードに着手可能
 	var m_next_color
+	var m_linedup = false		# 直前の着手でローカルボード内で三目並んだ
 	var m_lboard
 	var m_gboard
 	var m_nput_local = []		# 各ローカルボードの着手数
@@ -161,6 +162,7 @@ class Board:
 				return true;			# ／斜め方向に三目並んだ
 	func put(x : int, y : int, col):
 		#last_put_pos = [x, y]
+		m_linedup = false
 		m_nput += 1					# トータル着手数
 		m_lboard[x + y*N_HORZ] = col
 		var gx = x / 3
@@ -170,9 +172,9 @@ class Board:
 		var my = y % 3;
 		m_bd_index[ix] += g_pow_table[mx+my*3] * (1 if col==WHITE else 2);	#	盤面インデックス更新
 		m_nput_local[ix] += 1		# 各ローカルボードの着手数
-		var linedup = false			# ローカルボード内で三目ならんだか？
+		#var linedup = false			# ローカルボード内で三目ならんだか？
 		if !m_three_lined_up[ix] && is_three_stones(x, y):	# 三目並んだ→グローバルボード更新
-			linedup = true
+			m_linedup = true
 			m_gboard[ix] = col
 			m_gbd_index += g_pow_table[ix] * (1 if col==WHITE else 2);	#	盤面インデックス更新
 			m_three_lined_up[ix] = true
@@ -181,7 +183,7 @@ class Board:
 				m_winner = col
 		if !m_is_game_over && m_nput == N_HORZ*N_VERT:
 			m_is_game_over = true
-		m_stack.push_back(HistItem.new(x, y, linedup, m_next_board))
+		m_stack.push_back(HistItem.new(x, y, m_linedup, m_next_board))
 		m_next_color = (WHITE + BLACK) - col		# 手番交代
 		update_next_board(x, y)					# next_board 設定
 	func undo_put():
@@ -474,6 +476,8 @@ func update_next_mess():
 		$MessLabel.text = "☓ の手番です。"
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g_bd.put(x, y, g_bd.next_color())
+	if g_bd.m_linedup:		# ローカルボード内で三目並んだ
+		$AudioDon.play()		# 効果音
 	#g_bd.print()
 	if !replay:
 		move_hist.resize(g_bd.m_nput-1)
