@@ -303,6 +303,7 @@ class Board:
 		else:
 			x0 = (m_next_board % 3) * 3
 			y0 = (m_next_board / 3) * 3
+		var lst = []
 		for v in range(NV):
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
@@ -313,10 +314,18 @@ class Board:
 						if ev > alpha:
 							alpha = ev
 							ps = [x0+h, y0+v]
+							if DEPTH <= 2: lst = [ps]
+						elif ev == alpha && DEPTH <= 2:
+							lst.push_back([x0+h, y0+v])
 					else:
 						if ev < beta:
 							beta = ev
 							ps = [x0+h, y0+v]
+							if DEPTH <= 2: lst = [ps]
+						elif ev == beta && DEPTH <= 2:
+							lst.push_back([x0+h, y0+v])
+		if !lst.is_empty():
+			ps = lst[m_rng.randi_range(0, lst.size()-1)]
 		print("m_eval_count = ", m_eval_count)
 		print("eval = ", (alpha if m_next_color == WHITE else beta))
 		print("winner = ", m_winner)
