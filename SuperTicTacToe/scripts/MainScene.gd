@@ -19,330 +19,17 @@ enum {
 	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_2, AI_DEPTH_3, AI_DEPTH_4, AI_DEPTH_5, 
 }
 
-class HistItem:
-	var m_x:int				# 着手位置
-	var m_y:int
-	var m_linedup:bool		# 着手により、ローカルボード内で三目並んだ
-	var m_next_board:int	# （着手前）着手可能ローカルボード [0, 9)
-	func _init(px, py, lu, nb):
-		m_x = px
-		m_y = py
-		m_linedup = lu
-		m_next_board = nb
-class Board:
-	var m_nput = 0				# 総着手数
-	var m_is_game_over			# 終局状態か？
-	var m_winner				# 勝者
-	var m_next_board = -1		# 着手可能ローカルボード [0, 9)、-1 for 全ローカルボードに着手可能
-	var m_next_color
-	var m_linedup = false		# 直前の着手でローカルボード内で三目並んだ
-	var m_lboard
-	var m_gboard
-	var m_nput_local = []		# 各ローカルボードの着手数
-	var m_three_lined_up = []	# 各ローカルボード：三目並んだか？
-	var m_bd_index = []			# 各ローカルボード盤面インデックス
-	var m_gbd_index				# グローバルボード盤面インデックス
-	var m_stack = []			# 要素：HistItem
-	var m_eval_table			# 盤面インデックス→評価値テーブルへの参照
-	var m_eval_count
-	var m_rng = RandomNumberGenerator.new()
-	func _init():
-		#m_rng.randomize()		# Setups a time-based seed
-		#m_rng.seed = 0			# 固定乱数系列
-		init()
-		#print(ev_put_table)
-		pass
-	func init():
-		m_eval_count = 0
-		m_nput = 0
-		m_is_game_over = false
-		m_winner = EMPTY
-		m_next_color = WHITE
-		m_nput_local = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-		m_three_lined_up = [false, false, false, false, false, false, false, false, false]
-		m_bd_index = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-		m_gbd_index = 0
-		m_next_board = -1
-		m_lboard = []
-		for ix in range(N_HORZ*N_VERT): m_lboard.push_back(EMPTY)
-		m_gboard = []
-		for ix in range(N_HORZ*N_VERT/9): m_gboard.push_back(EMPTY)
-		m_stack = []
-		pass
-	func set_eval_table(eval_table): m_eval_table = eval_table
-	func last_put_pos():
-		if m_stack.is_empty(): return [-1, -1]
-		else: return [m_stack.back().m_x, m_stack.back().m_y]
-	func print():
-		var txt = "   ａｂｃ　ｄｅｆ　ｇｈｉ\n"
-		txt += " ＋－－－＋－－－＋－－－＋\n"
-		for y in range(N_VERT):
-			txt += "%d｜" % (y+1)
-			for x in range(N_HORZ):
-				if last_put_pos() != [x, y]:
-					txt += ["●", "・", "○"][m_lboard[x + y*N_HORZ]+1]
-					#txt += "X.O"[m_lboard[x + y*N_HORZ]+1]
-				else:
-					txt += ["◆", "・", "◇"][m_lboard[x + y*N_HORZ]+1]
-					#txt += "#.C"[m_lboard[x + y*N_HORZ]+1]
-				if x % 3 == 2: txt += "｜"
-			txt += "\n"
-			if y % 3 == 2: txt += " ＋－－－＋－－－＋－－－＋\n"
-		txt += "\n"
-		for y in range(N_VERT/3):
-			for x in range(N_HORZ/3):
-				txt += ["●", "・", "○"][m_gboard[x + y*(N_HORZ/3)]+1]
-			txt += "\n"
-		txt += "\n"
-		# 各ローカルボード盤面石数表示
-		txt += "nput[] = \n"
-		for i in range(9):
-			txt += "%d " % m_nput_local[i]
-			if i % 3 == 2: txt += "\n";
-		# 各ローカルボード盤面インデックス表示
-		txt += "bd_index[] = \n"
-		for i in range(9):
-			txt += "%d " % m_bd_index[i]
-			if i % 3 == 2: txt += "\n";
-		txt += "%d\n" % m_gbd_index
-		#
-		if m_is_game_over:
-			if m_winner == WHITE: txt += "O won.\n"
-			elif m_winner == BLACK: txt += "X won.\n"
-			else: txt += "draw.\n"
-		else:
-			txt += "next turn color: %s\n" % ("O" if m_next_color == WHITE else "X")
-			txt += "next board = %d\n" % m_next_board
-		txt += "last_put_pos = [%d, %d]\n" % last_put_pos()
-		txt += "eval = %d\n" % eval_board_index()
-		print(txt, "\n")
-		#print("last_put_pos = ", last_put_pos())
-		#print("eval = ", eval_board_index())
-	func is_game_over(): return m_is_game_over
-	func winner(): return m_winner
-	func next_color(): return m_next_color
-	func next_board(): return m_next_board
-	func is_empty(x : int, y : int):			# ローカルボード内のセル状態取得
-		return m_lboard[x + y*N_HORZ] == EMPTY
-	func get_color(x : int, y : int):			# ローカルボード内のセル状態取得
-		return m_lboard[x + y*N_HORZ]
-	func get_gcolor(gx : int, gy : int):		# グローバルボード内のセル状態取得
-		return m_gboard[gx + gy*(N_HORZ/3)]
-	func update_next_board(x : int, y : int):	# 次に着手可能なローカルボード設定
-		var x3 = x % 3
-		var y3 = y % 3
-		m_next_board = x3 + y3 * 3
-		if m_three_lined_up[m_next_board] || m_nput_local[m_next_board] == 9:
-			m_next_board = -1			# 全ローカルボードに着手可能
-	func is_three_stones(x : int, y : int):		# 三目並んだか？
-		var x3 : int = x % 3
-		var x0 : int = x - x3		# ローカルボード内左端座標
-		var y3 : int = y % 3
-		var y0 : int = y - y3		# ローカルボード内上端座標
-		if get_color(x0, y) == get_color(x0+1, y) && get_color(x0, y) == get_color(x0+2, y):
-			return true;			# 横方向に三目並んだ
-		if get_color(x, y0) == get_color(x, y0+1) && get_color(x, y0) == get_color(x, y0+2):
-			return true;			# 縦方向に三目並んだ
-		if x3 == y3:		# ＼斜め方向チェック
-			if get_color(x0, y0) == get_color(x0+1, y0+1) && get_color(x0, y0) == get_color(x0+2, y0+2):
-				return true;			# ＼斜め方向に三目並んだ
-		if x3 == 2 - y3:		# ／斜め方向チェック
-			if get_color(x0, y0+2) == get_color(x0+1, y0+1) && get_color(x0, y0+2) == get_color(x0+2, y0):
-				return true;			# ／斜め方向に三目並んだ
-	func is_three_stones_global(gx : int, gy : int):		# グローバルボードで三目並んだか？
-		if get_gcolor(0, gy) == get_gcolor(1, gy) && get_gcolor(0, gy) == get_gcolor(2, gy):
-			return true;			# 横方向に三目並んだ
-		if get_gcolor(gx, 0) == get_gcolor(gx, 1) && get_gcolor(gx, 0) == get_gcolor(gx, 2):
-			return true;			# 縦方向に三目並んだ
-		if gx == gy:		# ＼斜め方向チェック
-			if get_gcolor(0, 0) == get_gcolor(1, 1) && get_gcolor(0, 0) == get_gcolor(2, 2):
-				return true;			# ＼斜め方向に三目並んだ
-		if gx == 2 - gy:		# ／斜め方向チェック
-			if get_gcolor(0, 2) == get_gcolor(1, 1) && get_gcolor(0, 2) == get_gcolor(2, 0):
-				return true;			# ／斜め方向に三目並んだ
-	func put(x : int, y : int, col):
-		#last_put_pos = [x, y]
-		m_linedup = false
-		m_nput += 1					# トータル着手数
-		m_lboard[x + y*N_HORZ] = col
-		var gx = x / 3
-		var gy = y / 3
-		var ix = gx + gy*3
-		var mx = x % 3;
-		var my = y % 3;
-		m_bd_index[ix] += g_pow_table[mx+my*3] * (1 if col==WHITE else 2);	#	盤面インデックス更新
-		m_nput_local[ix] += 1		# 各ローカルボードの着手数
-		#var linedup = false			# ローカルボード内で三目ならんだか？
-		if !m_three_lined_up[ix] && is_three_stones(x, y):	# 三目並んだ→グローバルボード更新
-			m_linedup = true
-			m_gboard[ix] = col
-			m_gbd_index += g_pow_table[ix] * (1 if col==WHITE else 2);	#	盤面インデックス更新
-			m_three_lined_up[ix] = true
-			if is_three_stones_global(gx, gy):
-				m_is_game_over = true
-				m_winner = col
-		if !m_is_game_over && m_nput == N_HORZ*N_VERT:
-			m_is_game_over = true
-		m_stack.push_back(HistItem.new(x, y, m_linedup, m_next_board))
-		m_next_color = (WHITE + BLACK) - col		# 手番交代
-		update_next_board(x, y)					# next_board 設定
-	func undo_put():
-		if m_stack.is_empty(): return
-		m_nput -= 1
-		m_next_color = (WHITE + BLACK) - m_next_color	# 手番交代
-		var itm = m_stack.pop_back()
-		m_lboard[itm.m_x + itm.m_y*N_HORZ] = EMPTY
-		var gx = itm.m_x / 3
-		var gy = itm.m_y / 3
-		var ix = gx + gy*3
-		m_nput_local[ix] -= 1
-		var mx = itm.m_x % 3;
-		var my = itm.m_y % 3;
-		m_bd_index[ix] -= g_pow_table[mx+my*3] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
-		if itm.m_linedup:				# 着手で三目並んだ場合
-			m_gboard[gx + gy*3] = EMPTY
-			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
-			m_three_lined_up[ix] = false
-			m_is_game_over = false
-			m_winner = EMPTY
-		m_next_board = itm.m_next_board
-	func eval_board_index():	# 現局面を（○から見た）評価
-		m_eval_count += 1
-		#if( m_eval_count == 38 ):
-		#	print("stoped for Debug.")
-		var ev = 0
-		if( is_game_over() ):
-			ev = m_winner * GVAL * GVAL;
-		else:
-			for i in range(9):
-				if !m_three_lined_up[i]:
-					ev += m_eval_table[m_bd_index[i]]
-			ev += m_eval_table[m_gbd_index] * GVAL
-		#print(m_eval_count, ": ev = ", ev, ", m_next_board = ", m_next_board)
-		return ev
-	func select_random():
-		if m_nput == 0:		# 初期状態
-			return [m_rng.randi_range(0, N_HORZ-1), m_rng.randi_range(0, N_VERT-1)]
-		elif m_next_board < 0:	# 全てのローカルボードに着手可能
-			var lst = []
-			for y in range(N_VERT):
-				for x in range(N_HORZ):
-					if is_empty(x, y): lst.push_back([x, y])
-			return lst[m_rng.randi_range(0, lst.size() - 1)]
-		else:
-			var x0 = (m_next_board % 3) * 3
-			var y0 = (m_next_board / 3) * 3
-			var lst = []
-			for v in range(3):
-				for h in range(3):
-					if is_empty(x0+h, y0+v):
-						lst.push_back([x0+h, y0+v])
-			return lst[m_rng.randi_range(0, lst.size() - 1)]
-	func alpha_beta(alpha, beta, depth):
-		if depth <= 0 || is_game_over():
-			return eval_board_index()
-		var x0
-		var y0
-		var NH = 3
-		var NV = 3
-		var D = 1
-		if m_next_board < 0:		# 全ローカルボードに着手可能
-			x0 = 0
-			y0 = 0
-			NH = N_HORZ
-			NV = N_VERT
-			D = 2
-		else:
-			x0 = (m_next_board % 3) * 3
-			y0 = (m_next_board / 3) * 3
-		for v in range(NV):
-			for h in range(NH):
-				if is_empty(x0+h, y0+v):
-					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_beta(alpha, beta, depth-D) #*0.9999
-					undo_put()
-					if m_next_color == WHITE:
-						alpha = max(ev, alpha)
-						if alpha >= beta:
-							#print("*** beta cut, alpha = ", alpha)
-							return alpha
-					else:
-						beta = min(ev, beta)
-						if alpha >= beta:
-							#print("*** alpha cut, beta = ", beta)
-							return beta
-		#print("alpha = ", alpha, ", beta = ", beta)
-		if m_next_color == WHITE:
-			#print("alpha = ", alpha)
-			return alpha
-		else:
-			#print("beta = ", beta)
-			return beta
-	func select_alpha_beta(DEPTH):		# DEPTH先読み＋評価関数で着手決定
-		#var bd = Board.new()
-		m_eval_count = 0
-		#bd.set_eval(g_eval)
-		#bd.copy(self)
-		#var DEPTH = 3
-		if DEPTH > 2:
-			if m_nput >= 9*2: DEPTH += 1
-			if m_nput >= 9*4: DEPTH += 1
-			if m_nput >= 9*6: DEPTH += 1
-		var ps;
-		var alpha = -99999
-		var beta = 99999
-		var x0
-		var y0
-		var NH = 3
-		var NV = 3
-		var D = 1
-		if m_next_board < 0:		# 全ローカルボードに着手可能
-			x0 = 0
-			y0 = 0
-			NH = N_HORZ
-			NV = N_VERT
-			D = 2
-		else:
-			x0 = (m_next_board % 3) * 3
-			y0 = (m_next_board / 3) * 3
-		var lst = []
-		for v in range(NV):
-			for h in range(NH):
-				if is_empty(x0+h, y0+v):
-					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_beta(alpha, beta, DEPTH-D) #*0.9999
-					undo_put()
-					if m_next_color == WHITE:
-						if ev > alpha:
-							alpha = ev
-							ps = [x0+h, y0+v]
-							if DEPTH <= 2: lst = [ps]
-						elif ev == alpha && DEPTH <= 2:
-							lst.push_back([x0+h, y0+v])
-					else:
-						if ev < beta:
-							beta = ev
-							ps = [x0+h, y0+v]
-							if DEPTH <= 2: lst = [ps]
-						elif ev == beta && DEPTH <= 2:
-							lst.push_back([x0+h, y0+v])
-		if !lst.is_empty():
-			ps = lst[m_rng.randi_range(0, lst.size()-1)]
-		print("m_eval_count = ", m_eval_count)
-		print("eval = ", (alpha if m_next_color == WHITE else beta))
-		print("winner = ", m_winner)
-		return ps
-
-#----------------------------------------------------------------------
 
 const LINED3 = 100;				#	3目並んだ
 const LINED2 = 8;				#	2目並んだ
 const LINED1 = 1;				#	1目のみ
 
+
 var BOARD_ORG_X
 var BOARD_ORG_Y
 var BOARD_ORG
 
+var g = Global
 var rng = RandomNumberGenerator.new()
 var AI_thinking = false
 var waiting = 0;				# ウェイト中カウンタ
@@ -352,7 +39,7 @@ var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
 var print_eval_ix = -1			# -1 for 非表示
 var move_hist = []				# 着手履歴
-var g_bd			# 盤面オブジェクト
+#var g.bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 var g_eval_labels = []
@@ -366,13 +53,13 @@ func _ready():
 	BOARD_ORG = Vector2(BOARD_ORG_X, BOARD_ORG_Y)
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
 	build_eval_labels()				# 各セルに評価値表示用ラベル設置
-	g_bd = Board.new()
-	g_bd.m_rng = rng
-	g_bd.set_eval_table(g_eval_table)
+	#g.bd = Board.new()
+	#g.bd.m_rng = rng
+	#g.bd.set_eval_table(g_eval_table)
 	init_board()
 	update_next_underline()
-	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
-	g_bd.print()
+	update_board_tilemaps()		# g.bd の状態から TileMap たちを設定
+	g.bd.print()
 	$MessLabel.text = "【Start Game】を押してください。"
 	$CanvasLayer/ColorRect.material.set("shader_param/size", 0)
 	pass
@@ -386,8 +73,8 @@ func build_eval_labels():
 			$Board.add_child(lbl)
 			g_eval_labels.push_back(lbl)
 func init_board():
-	g_bd.init()
-	update_board_tilemaps()		# g_bd の状態から TileMap たちを設定
+	g.bd.init()
+	update_board_tilemaps()		# g.bd の状態から TileMap たちを設定
 	move_hist = []
 	$NStoneLabel.text = "#1 (spc: 81)"
 	$MessLabel.text = "【Start Game】を押してください。"
@@ -403,10 +90,10 @@ func on_game_over():
 	$CanvasLayer/ColorRect.show()
 	shock_wave_timer = 0.0      # start shock wave
 func update_next_underline():
-	$WhitePlayer/Underline.visible = game_started && g_bd.next_color() == WHITE
-	$BlackPlayer/Underline.visible = game_started && g_bd.next_color() == BLACK
+	$WhitePlayer/Underline.visible = game_started && g.bd.next_color() == WHITE
+	$BlackPlayer/Underline.visible = game_started && g.bd.next_color() == BLACK
 func update_nstone():
-	$NStoneLabel.text = "#%d (spc: %d)" % [g_bd.m_nput+1, 81-g_bd.m_nput]
+	$NStoneLabel.text = "#%d (spc: %d)" % [g.bd.m_nput+1, 81-g.bd.m_nput]
 func col2tsid(col):
 	match col:
 		EMPTY:	return TS_EMPTY
@@ -417,17 +104,17 @@ func tsid2col(id):
 		TS_EMPTY:	return EMPTY
 		TS_WHITE:	return WHITE
 		TS_BLACK:	return BLACK
-func update_board_tilemaps():		# g_bd の状態から TileMap たちを設定
+func update_board_tilemaps():		# g.bd の状態から TileMap たちを設定
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
-			$Board/TileMapLocal.set_cell(0, Vector2i(x, y), col2tsid(g_bd.get_color(x, y)), Vector2i(0, 0))
-			$Board/TileMapCursor.set_cell(0, Vector2i(x, y), (0 if g_bd.last_put_pos() == [x, y] else -1), Vector2i(0, 0))
+			$Board/TileMapLocal.set_cell(0, Vector2i(x, y), col2tsid(g.bd.get_color(x, y)), Vector2i(0, 0))
+			$Board/TileMapCursor.set_cell(0, Vector2i(x, y), (0 if g.bd.last_put_pos() == [x, y] else -1), Vector2i(0, 0))
 	var ix = 0
 	for y in range(N_VERT/3):
 		for x in range(N_HORZ/3):
-			var c = -1 if g_bd.next_board() >= 0 && ix != g_bd.next_board() else NEXT_LOCAL_BOARD
+			var c = -1 if g.bd.next_board() >= 0 && ix != g.bd.next_board() else NEXT_LOCAL_BOARD
 			$Board/TileMapBG.set_cell(0, Vector2i(x, y), c, Vector2i(0, 0))
-			$Board/TileMapGlobal.set_cell(0, Vector2i(x, y), col2tsid(g_bd.get_gcolor(x, y)), Vector2i(0, 0))
+			$Board/TileMapGlobal.set_cell(0, Vector2i(x, y), col2tsid(g.bd.get_gcolor(x, y)), Vector2i(0, 0))
 			ix += 1
 	pass
 func can_put_local(x : int, y : int):
@@ -470,25 +157,25 @@ func build_3x3_eval_table():
 		g_eval_table[ix] = eval3x3(g_board3x3);
 		#print(g_eval_table[ix]);
 func update_next_mess():
-	if g_bd.next_color() == WHITE:
+	if g.bd.next_color() == WHITE:
 		$MessLabel.text = "Ｏ の手番です。"
 	else:
 		$MessLabel.text = "☓ の手番です。"
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
-	g_bd.put(x, y, g_bd.next_color())
-	#g_bd.print()
+	g.bd.put(x, y, g.bd.next_color())
+	#g.bd.print()
 	if !replay:
-		move_hist.resize(g_bd.m_nput-1)
+		move_hist.resize(g.bd.m_nput-1)
 		move_hist.push_back([x, y])
-	if g_bd.is_game_over():
+	if g.bd.is_game_over():
 		$Audio/Kirakira.play()
 		game_started = false
-		match g_bd.winner():
+		match g.bd.winner():
 			EMPTY:	$MessLabel.text = "引き分けです。"
 			WHITE:	$MessLabel.text = "○ の勝ちです。"
 			BLACK:	$MessLabel.text = "☓ の勝ちです。"
 	else:
-		if g_bd.m_linedup:		# ローカルボード内で三目並んだ
+		if g.bd.m_linedup:		# ローカルボード内で三目並んだ
 			$Audio/Don.play()		# 効果音
 		update_next_mess()
 	update_next_underline()
@@ -499,43 +186,43 @@ func _process(delta):
 	if waiting > 0:
 		waiting -= 1
 	elif( game_started && !AI_thinking &&
-			(g_bd.next_color() == WHITE && white_player >= AI_RANDOM ||
-			g_bd.next_color() == BLACK && black_player >= AI_RANDOM) ):
+			(g.bd.next_color() == WHITE && white_player >= AI_RANDOM ||
+			g.bd.next_color() == BLACK && black_player >= AI_RANDOM) ):
 		# AI の手番
 		#if !game_started:
 		#	print("??? game_started = ", game_started)
 		AI_thinking = true
 		#var pos = AI_think_random()
-		var typ = white_player if g_bd.next_color() == WHITE else black_player
-		var pos = (g_bd.select_random() if typ == AI_RANDOM else
-					g_bd.select_alpha_beta(typ - AI_RANDOM))
+		var typ = white_player if g.bd.next_color() == WHITE else black_player
+		var pos = (g.bd.select_random() if typ == AI_RANDOM else
+					g.bd.select_alpha_beta(typ - AI_RANDOM))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
 		put_and_post_proc(pos[0], pos[1], false)
 		waiting = WAIT
 		AI_thinking = false
-		if g_bd.is_game_over():
+		if g.bd.is_game_over():
 			on_game_over()
 	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
 		# 空欄に評価値を表示
-		if g_bd.next_board() < 0:	# 全ローカルボードに着手可能
-			if g_bd.is_empty(print_eval_ix%9, print_eval_ix/9):
-				g_bd.put(print_eval_ix%9, print_eval_ix/9, g_bd.next_color())
-				var ev = min(9999, max(-9999, g_bd.alpha_beta(-2000, 2000, 3)))
-				g_bd.undo_put()
+		if g.bd.next_board() < 0:	# 全ローカルボードに着手可能
+			if g.bd.is_empty(print_eval_ix%9, print_eval_ix/9):
+				g.bd.put(print_eval_ix%9, print_eval_ix/9, g.bd.next_color())
+				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3)))
+				g.bd.undo_put()
 				g_eval_labels[print_eval_ix].text = "%d" % ev
 			print_eval_ix += 1
 			if print_eval_ix >= N_HORZ*N_VERT:
 				print_eval_ix = -1
-		else:	# g_bd.next_board() にのみ着手可能
-			var x0 = (g_bd.next_board() % 3) * 3
-			var y0 = (g_bd.next_board() / 3) * 3
+		else:	# g.bd.next_board() にのみ着手可能
+			var x0 = (g.bd.next_board() % 3) * 3
+			var y0 = (g.bd.next_board() / 3) * 3
 			var h = print_eval_ix % 3
 			var v = print_eval_ix / 3
-			if g_bd.is_empty(x0 + h, y0 + v):
-				g_bd.put(x0 + h, y0 + v, g_bd.next_color())
-				var ev = min(9999, max(-9999, g_bd.alpha_beta(-2000, 2000, 3)))
-				g_bd.undo_put()
+			if g.bd.is_empty(x0 + h, y0 + v):
+				g.bd.put(x0 + h, y0 + v, g.bd.next_color())
+				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3)))
+				g.bd.undo_put()
 				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
 			print_eval_ix += 1
 			if print_eval_ix >= 9:
@@ -564,12 +251,12 @@ func _input(event):
 			#	game_started = true
 			#	return
 			if pos.x < 0 || pos.x >= N_HORZ || pos.y < 0 || pos.y > N_VERT: return
-			if !g_bd.is_empty(pos.x, pos.y): return
+			if !g.bd.is_empty(pos.x, pos.y): return
 			var gx = int(pos.x) / 3
 			var gy = int(pos.y) / 3
 			if !can_put_local(gx, gy): return
 			put_and_post_proc(pos.x, pos.y, false)
-			if g_bd.is_game_over():
+			if g.bd.is_game_over():
 				on_game_over()
 			waiting = WAIT
 	pass
@@ -591,11 +278,11 @@ func _on_start_stop_button_pressed():
 		$InitButton.disabled = true
 		$StartStopButton.text = "■ Stop Game"
 		clear_eval_labels()
-		if g_bd.is_game_over():
+		if g.bd.is_game_over():
 			init_board()
 		update_next_mess()
 	else:
-		if !g_bd.is_game_over():
+		if !g.bd.is_game_over():
 			$WhitePlayer/OptionButton.disabled = false
 			$BlackPlayer/OptionButton.disabled = false
 			$InitButton.disabled = false
@@ -608,9 +295,9 @@ func _on_White_option_button_item_selected(index):
 func _on_Black_option_button_item_selected(index):
 	black_player = index
 func _on_undo_button_pressed():
-	if g_bd.m_stack.size() < 2: return
-	g_bd.undo_put()
-	g_bd.undo_put()
+	if g.bd.m_stack.size() < 2: return
+	g.bd.undo_put()
+	g.bd.undo_put()
 	update_board_tilemaps()
 	update_nstone()
 func update_eval_labels():
@@ -619,14 +306,14 @@ func update_eval_labels():
 		print_eval_ix = 0
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
-	$HBC/SkipPrevButton.disabled = game_started || g_bd.m_stack.is_empty()
-	$HBC/BackwardButton.disabled = game_started || g_bd.m_stack.is_empty()
-	$HBC/ForwardButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
-	$HBC/SkipNextButton.disabled = game_started || move_hist.size() <= g_bd.m_nput
+	$HBC/SkipPrevButton.disabled = game_started || g.bd.m_stack.is_empty()
+	$HBC/BackwardButton.disabled = game_started || g.bd.m_stack.is_empty()
+	$HBC/ForwardButton.disabled = game_started || move_hist.size() <= g.bd.m_nput
+	$HBC/SkipNextButton.disabled = game_started || move_hist.size() <= g.bd.m_nput
 	$StartStopButton.disabled = false
 func _on_skip_prev_button_pressed():	# 初手まで戻る
-	while !g_bd.m_stack.is_empty():
-		g_bd.undo_put()
+	while !g.bd.m_stack.is_empty():
+		g.bd.undo_put()
 	update_board_tilemaps()
 	update_next_mess()
 	update_next_underline()
@@ -635,8 +322,8 @@ func _on_skip_prev_button_pressed():	# 初手まで戻る
 	$StartStopButton.disabled = false
 	update_eval_labels()
 func _on_backward_button_pressed():		# 戻る
-	if g_bd.m_stack.size() < 1: return
-	g_bd.undo_put()
+	if g.bd.m_stack.size() < 1: return
+	g.bd.undo_put()
 	update_board_tilemaps()
 	update_next_mess()
 	update_next_underline()
@@ -645,14 +332,14 @@ func _on_backward_button_pressed():		# 戻る
 	#print("move_hist = ", move_hist)
 	update_eval_labels()
 func _on_forward_button_pressed():		# 進める
-	if move_hist.size() <= g_bd.m_nput: return
+	if move_hist.size() <= g.bd.m_nput: return
 	#print("move_hist = ", move_hist)
-	var t = move_hist[g_bd.m_nput]
+	var t = move_hist[g.bd.m_nput]
 	put_and_post_proc(t[0], t[1], true)
 	update_eval_labels()
 func _on_skip_next_button_pressed():	# 最後まで進める
-	while move_hist.size() > g_bd.m_nput:
-		var t = move_hist[g_bd.m_nput]
+	while move_hist.size() > g.bd.m_nput:
+		var t = move_hist[g.bd.m_nput]
 		put_and_post_proc(t[0], t[1], true)
 	update_eval_labels()
 func clear_eval_labels():
