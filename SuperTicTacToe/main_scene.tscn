@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=43 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_dsv07"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://dlsucafj1alws" path="res://images/skip_next_gray.png" id="24_4vn52"]
 [ext_resource type="Shader" path="res://main_scene.gdshader" id="27_pqj7x"]
 [ext_resource type="Texture2D" uid="uid://dlvmybytw1evg" path="res://images/rule_black.png" id="27_tcd3h"]
+[ext_resource type="Texture2D" uid="uid://bsn1fr6wmx57k" path="res://images/rule_gray.png" id="28_a7iji"]
 [ext_resource type="Texture2D" uid="uid://dj0y1k44oaxaw" path="res://images/rule_white.png" id="28_kre8h"]
 [ext_resource type="AudioStream" uid="uid://dff6mt3wexrw0" path="res://sounds/don.mp3" id="30_w5sgk"]
 [ext_resource type="AudioStream" uid="uid://c2pp036ka0rvh" path="res://sounds/kirakira-3.mp3" id="31_7ma7b"]
@@ -391,6 +392,7 @@ texture = ExtResource("13_xkyjp")
 layout_mode = 2
 texture_normal = ExtResource("27_tcd3h")
 texture_pressed = ExtResource("28_kre8h")
+texture_disabled = ExtResource("28_a7iji")
 
 [node name="Label" type="Label" parent="HBC/RuleButton"]
 layout_mode = 0

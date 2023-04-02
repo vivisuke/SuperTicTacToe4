@@ -83,6 +83,7 @@ func init_board():
 func on_game_over():
 	print("on_game_over()")
 	game_started = false
+	$HBC/RuleButton.disable = game_started
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
 	$InitButton.disabled = false
@@ -172,6 +173,7 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 	if g.bd.is_game_over():
 		$Audio/Kirakira.play()
 		game_started = false
+		$HBC/RuleButton.disabled = game_started
 		match g.bd.winner():
 			EMPTY:	$MessLabel.text = "引き分けです。"
 			WHITE:	$MessLabel.text = "○ の勝ちです。"
@@ -275,6 +277,7 @@ func _on_init_button_pressed():
 
 func _on_start_stop_button_pressed():
 	game_started = !game_started
+	$HBC/RuleButton.disabled = game_started
 	if game_started:
 		$WhitePlayer/OptionButton.disabled = true
 		$BlackPlayer/OptionButton.disabled = true
