@@ -34,8 +34,8 @@ var rng = RandomNumberGenerator.new()
 var AI_thinking = false
 var waiting = 0;				# ウェイト中カウンタ
 var game_started = false		# ゲーム中か？
-var white_player = HUMAN
-var black_player = HUMAN
+#var white_player = HUMAN
+#var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
 var print_eval_ix = -1			# -1 for 非表示
 var move_hist = []				# 着手履歴
@@ -60,6 +60,8 @@ func _ready():
 	update_next_underline()
 	update_board_tilemaps()		# g.bd の状態から TileMap たちを設定
 	g.bd.print()
+	$WhitePlayer/OptionButton.select(g.white_player)
+	$BlackPlayer/OptionButton.select(g.black_player)
 	$MessLabel.text = "【Start Game】を押してください。"
 	$CanvasLayer/ColorRect.material.set("shader_param/size", 0)
 	pass
@@ -73,7 +75,7 @@ func build_eval_labels():
 			$Board.add_child(lbl)
 			g_eval_labels.push_back(lbl)
 func init_board():
-	g.bd.init()
+	#g.bd.init()
 	update_board_tilemaps()		# g.bd の状態から TileMap たちを設定
 	move_hist = []
 	$NStoneLabel.text = "#1 (spc: 81)"
@@ -186,14 +188,14 @@ func _process(delta):
 	if waiting > 0:
 		waiting -= 1
 	elif( game_started && !AI_thinking &&
-			(g.bd.next_color() == WHITE && white_player >= AI_RANDOM ||
-			g.bd.next_color() == BLACK && black_player >= AI_RANDOM) ):
+			(g.bd.next_color() == WHITE && g.white_player >= AI_RANDOM ||
+			g.bd.next_color() == BLACK && g.black_player >= AI_RANDOM) ):
 		# AI の手番
 		#if !game_started:
 		#	print("??? game_started = ", game_started)
 		AI_thinking = true
 		#var pos = AI_think_random()
-		var typ = white_player if g.bd.next_color() == WHITE else black_player
+		var typ = g.white_player if g.bd.next_color() == WHITE else g.black_player
 		var pos = (g.bd.select_random() if typ == AI_RANDOM else
 					g.bd.select_alpha_beta(typ - AI_RANDOM))
 		#print("game_started = ", game_started)
@@ -267,6 +269,7 @@ func _on_init_button_pressed():
 	$StartStopButton.disabled = false
 	$StartStopButton.text = "▶ Start Game"
 	clear_eval_labels()
+	g.bd.init()
 	init_board()
 	pass # Replace with function body.
 
@@ -291,9 +294,9 @@ func _on_start_stop_button_pressed():
 	update_next_underline()
 	update_back_forward_buttons()
 func _on_White_option_button_item_selected(index):
-	white_player = index
+	g.white_player = index
 func _on_Black_option_button_item_selected(index):
-	black_player = index
+	g.black_player = index
 func _on_undo_button_pressed():
 	if g.bd.m_stack.size() < 2: return
 	g.bd.undo_put()

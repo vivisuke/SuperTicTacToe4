@@ -339,18 +339,22 @@ const LINED3 = 100;				#	3目並んだ
 const LINED2 = 8;				#	2目並んだ
 const LINED1 = 1;				#	1目のみ
 
+var white_player = HUMAN
+var black_player = HUMAN
 var bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 var rng = RandomNumberGenerator.new()
 
 func _ready():
+	print("Global._ready()")
 	rng.randomize()		# Setups a time-based seed
 	#rng.seed = 0		# 固定乱数系列
 	bd = Board.new()
 	bd.m_rng = rng
 	bd.set_eval_table(g_eval_table)
 	build_3x3_eval_table()			# 3x3盤面→評価値テーブル構築
+	bd.init()
 	pass # Replace with function body.
 
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
