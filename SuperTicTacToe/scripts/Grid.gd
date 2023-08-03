@@ -16,7 +16,7 @@ func _ready():
 		var l = Label.new()
 		l.text = "123456789"[y]
 		#l.set_position(Vector2(8, 23+(y+0.5)*75))
-		l.set_position(Vector2(5, FRAME_WD-2+(y+0.5)*CELL_WD))
+		l.set_position(Vector2(5, FRAME_WD-10+(y+0.5)*CELL_WD))
 		add_child(l)
 	pass # Replace with function body.
 
