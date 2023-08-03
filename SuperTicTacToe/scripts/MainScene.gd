@@ -83,7 +83,7 @@ func init_board():
 func on_game_over():
 	print("on_game_over()")
 	game_started = false
-	$HBC/RuleButton.disable = game_started
+	$HBC/RuleButton.disabled = game_started
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
 	$InitButton.disabled = false

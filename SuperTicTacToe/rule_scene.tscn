@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://3430qkiifdud"]
+[gd_scene load_steps=19 format=3 uid="uid://3430qkiifdud"]
 
 [ext_resource type="Script" path="res://scripts/rule_scene.gd" id="1_j7eu0"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_xxjgr"]
@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://5b15fe37rgjf" path="res://images/empty24.png" id="13_t3sgr"]
 [ext_resource type="Texture2D" uid="uid://c85kr7wnerdyh" path="res://images/dot_black.png" id="14_ntpfu"]
 [ext_resource type="Texture2D" uid="uid://cuk1oeaxa8l5u" path="res://images/dot_orange.png" id="15_pc72f"]
+[ext_resource type="Texture2D" uid="uid://b3goysl4f6xwe" path="res://images/navigate_next_gray.png" id="18_hpk8b"]
 
 [node name="RuleScene" type="Node2D"]
 script = ExtResource("1_j7eu0")
@@ -168,7 +169,7 @@ texture = ExtResource("13_t3sgr")
 layout_mode = 2
 texture_normal = ExtResource("10_wes61")
 texture_pressed = ExtResource("13_pq2n6")
-texture_disabled = ExtResource("11_irpas")
+texture_disabled = ExtResource("18_hpk8b")
 
 [node name="Label" type="Label" parent="HBC/NextButton"]
 layout_mode = 0
