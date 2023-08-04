@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://3430qkiifdud"]
+[gd_scene load_steps=20 format=3 uid="uid://3430qkiifdud"]
 
 [ext_resource type="Script" path="res://scripts/rule_scene.gd" id="1_j7eu0"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_xxjgr"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dtinue2hbqdbc" path="res://screen/next_board.png" id="8_h2clv"]
 [ext_resource type="Texture2D" uid="uid://djggo6oguhs4x" path="res://images/navigate_before_black.png" id="9_7xtiw"]
 [ext_resource type="Texture2D" uid="uid://cptxyeghsnsme" path="res://screen/next_board_all.png" id="9_x6nxt"]
+[ext_resource type="FontFile" uid="uid://cq7cdxw5emvam" path="res://fonts/FlopDesignFONT.otf" id="10_prkdg"]
 [ext_resource type="Texture2D" uid="uid://s3vn7itltcau" path="res://images/navigate_before_white.png" id="10_qvsqc"]
 [ext_resource type="Texture2D" uid="uid://cc5d6aleorq3n" path="res://images/navigate_next_black.png" id="10_wes61"]
 [ext_resource type="Texture2D" uid="uid://2ifgglcpw8gb" path="res://images/navigate_before_gray.png" id="11_irpas"]
@@ -94,7 +95,8 @@ offset_top = 620.0
 offset_right = 490.0
 offset_bottom = 770.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("10_prkdg")
+theme_override_font_sizes/font_size = 22
 text = "Super Tic-Tac-Toe（超三目並べ）は、○☓ を交互に打っていき、大きい盤面で先に三目並べた方が勝ちのゲームです。
 "
 autowrap_mode = 1
