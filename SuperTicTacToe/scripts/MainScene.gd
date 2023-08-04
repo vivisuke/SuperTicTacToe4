@@ -163,7 +163,7 @@ func update_next_mess():
 	if g.bd.next_color() == WHITE:
 		$MessLabel.text = "Ｏ の手番です。"
 	else:
-		$MessLabel.text = "☓ の手番です。"
+		$MessLabel.text = "Ｘ の手番です。"
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g.bd.put(x, y, g.bd.next_color())
 	#g.bd.print()
