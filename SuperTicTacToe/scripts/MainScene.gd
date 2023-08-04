@@ -88,7 +88,8 @@ func on_game_over():
 	$BlackPlayer/OptionButton.disabled = false
 	$InitButton.disabled = false
 	$StartStopButton.disabled = true
-	$StartStopButton.text = "▶ Cont. Game"
+	$StartStopButton.text = "Cont. Game"
+	$StartStopButton.icon = $PlayTextureRect.texture
 	update_board_tilemaps()
 	$CanvasLayer/ColorRect.show()
 	shock_wave_timer = 0.0      # start shock wave
@@ -269,7 +270,8 @@ func _on_init_button_pressed():
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
 	$StartStopButton.disabled = false
-	$StartStopButton.text = "▶ Start Game"
+	$StartStopButton.text = "Start Game"
+	$StartStopButton.icon = $PlayTextureRect.texture
 	clear_eval_labels()
 	g.bd.init()
 	init_board()
@@ -282,7 +284,8 @@ func _on_start_stop_button_pressed():
 		$WhitePlayer/OptionButton.disabled = true
 		$BlackPlayer/OptionButton.disabled = true
 		$InitButton.disabled = true
-		$StartStopButton.text = "■ Stop Game"
+		$StartStopButton.text = "Stop Game"
+		$StartStopButton.icon = $StopTextureRect.texture
 		clear_eval_labels()
 		if g.bd.is_game_over():
 			init_board()
@@ -292,7 +295,8 @@ func _on_start_stop_button_pressed():
 			$WhitePlayer/OptionButton.disabled = false
 			$BlackPlayer/OptionButton.disabled = false
 			$InitButton.disabled = false
-			$StartStopButton.text = "▶ Cont. Game"
+			$StartStopButton.text = "Cont. Game"
+			$StartStopButton.icon = $PlayTextureRect.texture
 		$MessLabel.text = ""
 	update_next_underline()
 	update_back_forward_buttons()
