@@ -371,4 +371,5 @@ func _on_rule_button_pressed():
 
 func _on_option_button_item_selected(index):
 	g.lang = index
+	g.save_lang()
 	pass # Replace with function body.

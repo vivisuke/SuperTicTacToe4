@@ -1,4 +1,4 @@
-﻿extends Node2D
+extends Node2D
 
 const N_VERT = 9
 const N_HORZ = 9
@@ -7,6 +7,7 @@ const NEXT_LOCAL_BOARD = 0
 #const BATSU = 0
 const WAIT = 6*3
 const GVAL = 100
+const SettingsFileName	= "user://KillerSudoku6_stgs.dat"
 
 const g_pow_table = [	pow(3, 8), pow(3, 7), pow(3, 6),
 						pow(3, 5), pow(3, 4), pow(3, 3),
@@ -19,8 +20,6 @@ enum {
 	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_2, AI_DEPTH_3, AI_DEPTH_4, AI_DEPTH_5, 
 	JA = 0, EN,			# 日本語/英語
 }
-
-var lang = JA
 
 class HistItem:
 	var m_x:int				# 着手位置
@@ -342,6 +341,9 @@ const LINED3 = 100;				#	3目並んだ
 const LINED2 = 8;				#	2目並んだ
 const LINED1 = 1;				#	1目のみ
 
+var lang = JA
+var settings = {}		# 設定辞書
+
 var white_player = HUMAN
 var black_player = HUMAN
 var bd			# 盤面オブジェクト
@@ -353,6 +355,7 @@ func _ready():
 	print("Global._ready()")
 	rng.randomize()		# Setups a time-based seed
 	#rng.seed = 0		# 固定乱数系列
+	load_lang()
 	bd = Board.new()
 	bd.m_rng = rng
 	bd.set_eval_table(g_eval_table)
@@ -398,3 +401,15 @@ func build_3x3_eval_table():
 		g_eval_table[ix] = eval3x3(g_board3x3);
 		#print(g_eval_table[ix]);
 
+#
+func load_lang():
+	#var file = FileAccess.new()
+	if FileAccess.file_exists(SettingsFileName):		# 設定ファイル
+		var file = FileAccess.open(SettingsFileName, FileAccess.READ)
+		lang = file.get_var()
+		file.close()
+func save_lang():
+	#var file = File.new()
+	var file = FileAccess.open(SettingsFileName, FileAccess.WRITE)
+	file.store_var(lang)
+	file.close()
