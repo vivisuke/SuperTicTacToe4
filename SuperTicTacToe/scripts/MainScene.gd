@@ -60,6 +60,7 @@ func _ready():
 	update_next_underline()
 	update_board_tilemaps()		# g.bd の状態から TileMap たちを設定
 	g.bd.print()
+	$LangRect/OptionButton.select(g.lang)
 	$WhitePlayer/OptionButton.select(g.white_player)
 	$BlackPlayer/OptionButton.select(g.black_player)
 	$MessLabel.text = "【Start Game】を押してください。"
@@ -365,4 +366,9 @@ func _on_print_eval_button_toggled(button_pressed):
 
 func _on_rule_button_pressed():
 	get_tree().change_scene_to_file("res://rule_scene.tscn")
+	pass # Replace with function body.
+
+
+func _on_option_button_item_selected(index):
+	g.lang = index
 	pass # Replace with function body.

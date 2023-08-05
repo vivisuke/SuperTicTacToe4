@@ -473,6 +473,7 @@ texture = ExtResource("34_mvoww")
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
 [connection signal="pressed" from="InitButton" to="." method="_on_init_button_pressed"]
+[connection signal="item_selected" from="LangRect/OptionButton" to="." method="_on_option_button_item_selected"]
 [connection signal="item_selected" from="WhitePlayer/OptionButton" to="." method="_on_White_option_button_item_selected"]
 [connection signal="item_selected" from="BlackPlayer/OptionButton" to="." method="_on_Black_option_button_item_selected"]
 [connection signal="pressed" from="HBC/UndoButton" to="." method="_on_undo_button_pressed"]
