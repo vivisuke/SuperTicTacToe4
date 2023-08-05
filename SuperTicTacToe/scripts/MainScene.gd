@@ -44,6 +44,7 @@ var g_board3x3 = []			# 3x3 盤面 for 作業用
 var g_eval_table = []		# 盤面インデックス→評価値 テーブル
 var g_eval_labels = []
 var shock_wave_timer = -1
+var mess_lst = []			# [日本語, 英語] メッセージ
 
 func _ready():
 	#rng.randomize()		# Setups a time-based seed
@@ -63,9 +64,13 @@ func _ready():
 	$LangRect/OptionButton.select(g.lang)
 	$WhitePlayer/OptionButton.select(g.white_player)
 	$BlackPlayer/OptionButton.select(g.black_player)
-	$MessLabel.text = "【Start Game】を押してください。"
+	#$MessLabel.text = "【Start Game】を押してください。"
+	set_message(["【Start Game】を押してください。", "Press [Start Game]."])
 	$CanvasLayer/ColorRect.material.set("shader_param/size", 0)
 	pass
+func set_message(lst):
+	mess_lst = lst
+	$MessLabel.text = mess_lst[g.lang]
 func build_eval_labels():
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
@@ -80,7 +85,8 @@ func init_board():
 	update_board_tilemaps()		# g.bd の状態から TileMap たちを設定
 	move_hist = []
 	$NStoneLabel.text = "#1 (spc: 81)"
-	$MessLabel.text = "【Start Game】を押してください。"
+	#$MessLabel.text = "【Start Game】を押してください。"
+	set_message(["【Start Game】を押してください。", "Press [Start Game]."])
 func on_game_over():
 	print("on_game_over()")
 	game_started = false
@@ -163,9 +169,11 @@ func build_3x3_eval_table():
 		#print(g_eval_table[ix]);
 func update_next_mess():
 	if g.bd.next_color() == WHITE:
-		$MessLabel.text = "Ｏ の手番です。"
+		#$MessLabel.text = "Ｏ の手番です。"
+		set_message(["Ｏ の手番です。", "The next turn is O."])
 	else:
-		$MessLabel.text = "Ｘ の手番です。"
+		#$MessLabel.text = "Ｘ の手番です。"
+		set_message(["Ｘ の手番です。", "The next turn is X."])
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g.bd.put(x, y, g.bd.next_color())
 	#g.bd.print()
@@ -176,10 +184,12 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 		$Audio/Kirakira.play()
 		game_started = false
 		$HBC/RuleButton.disabled = game_started
+		var lst
 		match g.bd.winner():
-			EMPTY:	$MessLabel.text = "引き分けです。"
-			WHITE:	$MessLabel.text = "○ の勝ちです。"
-			BLACK:	$MessLabel.text = "☓ の勝ちです。"
+			EMPTY:	lst = ["引き分けです。", "draw."]
+			WHITE:	lst = ["○ の勝ちです。", "O won."]
+			BLACK:	lst = ["☓ の勝ちです。", "X won."]
+		set_message(lst)
 	else:
 		if g.bd.m_linedup:		# ローカルボード内で三目並んだ
 			$Audio/Don.play()		# 効果音
@@ -298,7 +308,8 @@ func _on_start_stop_button_pressed():
 			$InitButton.disabled = false
 			$StartStopButton.text = "Cont. Game"
 			$StartStopButton.icon = $PlayTextureRect.texture
-		$MessLabel.text = ""
+		#$MessLabel.text = ""
+		set_message(["", ""])
 	update_next_underline()
 	update_back_forward_buttons()
 func _on_White_option_button_item_selected(index):
@@ -372,4 +383,5 @@ func _on_rule_button_pressed():
 func _on_option_button_item_selected(index):
 	g.lang = index
 	g.save_lang()
+	$MessLabel.text = mess_lst[g.lang]
 	pass # Replace with function body.
