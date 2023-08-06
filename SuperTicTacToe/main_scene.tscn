@@ -324,9 +324,9 @@ offset_bottom = 50.0
 color = Color(1, 1, 0, 1)
 
 [node name="HBC" type="HBoxContainer" parent="."]
-offset_top = 775.0
+offset_top = 820.0
 offset_right = 500.0
-offset_bottom = 815.0
+offset_bottom = 868.0
 alignment = 1
 
 [node name="UndoButton" type="TextureButton" parent="HBC"]

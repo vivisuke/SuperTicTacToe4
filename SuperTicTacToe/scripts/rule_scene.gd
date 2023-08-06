@@ -1,5 +1,6 @@
 extends Node2D
 
+var g = Global
 var page = 0;			# 
 var pict = []
 var page_buttons = []
@@ -10,6 +11,14 @@ var rule_text = [
 	"ローカルボード内に打った箇所により, 次に着手可能なローカルボード (背景が白) が決まります。\n" +
 	"上図ではd1はローカルボード内の左上なので、左上のローカルボードに着手可能になります。",
 	"ただし, 次がすでに三目並んでいる, または空きが無い場合は, 全ての箇所に打つことが可能です。",
+]
+var rule_text_en = [
+	#"Super Tic-Tac-Toe alternately puts O and X on the small board (local board), and the first to form a tic-tac-toe on the large board (global board) wins. ",
+	"Super Tic-Tac-Toe is a two-player game played on a 9x9 grid. Each player takes turns placing an X or an O in a small board (local board). The first player to get three of their marks in a row, column, or diagonal on global board wins the game. ",
+	"When you make a line of O (X) thirds on the local board, a large O (X) is placed in the corresponding cell of the global board.",
+	"Depending on where you place it in the local board, the next available local board (with a white background) is determined.\n" +
+	"In the above figure, d1 is the top left of the local board, so it is possible to start on the top left local board.",
+	"However, if the next one is already in a row or there are no vacancies, it is possible to place anywhere.",
 ]
 
 # Called when the node enters the scene tree for the first time.
@@ -30,7 +39,10 @@ func update_pict_text_buttons():
 			pict[i].hide()
 		#pict[i].visible = i == page
 		page_buttons[i].button_pressed = i == page
-	$RuleLabel.text = rule_text[page]
+	if g.lang == g.JA:
+		$RuleLabel.text = rule_text[page]
+	else:
+		$RuleLabel.text = rule_text_en[page]
 	$HBC/PrevButton.disabled = page == 0
 	$HBC/NextButton.disabled = page == rule_text.size() - 1
 	pass
