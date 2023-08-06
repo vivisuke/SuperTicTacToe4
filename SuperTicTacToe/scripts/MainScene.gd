@@ -187,8 +187,8 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 		var lst
 		match g.bd.winner():
 			EMPTY:	lst = ["引き分けです。", "draw."]
-			WHITE:	lst = ["○ の勝ちです。", "O won."]
-			BLACK:	lst = ["☓ の勝ちです。", "X won."]
+			WHITE:	lst = ["Ｏ の勝ちです。", "O won."]
+			BLACK:	lst = ["Ｘ の勝ちです。", "X won."]
 		set_message(lst)
 	else:
 		if g.bd.m_linedup:		# ローカルボード内で三目並んだ
