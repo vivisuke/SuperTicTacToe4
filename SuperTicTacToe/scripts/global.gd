@@ -240,9 +240,13 @@ class Board:
 					if is_empty(x0+h, y0+v):
 						lst.push_back([x0+h, y0+v])
 			return lst[m_rng.randi_range(0, lst.size() - 1)]
-	func alpha_beta(alpha, beta, depth):
+	func alpha_beta(alpha, beta, depth, ply):
 		if depth <= 0 || is_game_over():
-			return eval_board_index()
+			#return eval_board_index()
+			var ev = eval_board_index()
+			if ev > 0: ev -= ply
+			elif ev < 0: ev += ply
+			return ev
 		var x0
 		var y0
 		var NH = 3
@@ -261,7 +265,7 @@ class Board:
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
 					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_beta(alpha, beta, depth-D) #*0.9999
+					var ev = alpha_beta(alpha, beta, depth-D, ply+1) #*0.9999
 					undo_put()
 					if m_next_color == WHITE:
 						alpha = max(ev, alpha)
@@ -312,7 +316,7 @@ class Board:
 			for h in range(NH):
 				if is_empty(x0+h, y0+v):
 					put(x0+h, y0+v, m_next_color)
-					var ev = alpha_beta(alpha, beta, DEPTH-D) #*0.9999
+					var ev = alpha_beta(alpha, beta, DEPTH-D, 0) #*0.9999
 					undo_put()
 					if m_next_color == WHITE:
 						if ev > alpha:
