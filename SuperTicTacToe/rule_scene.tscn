@@ -93,13 +93,14 @@ texture = ExtResource("9_x6nxt")
 offset_left = 10.0
 offset_top = 620.0
 offset_right = 490.0
-offset_bottom = 770.0
+offset_bottom = 820.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("10_prkdg")
 theme_override_font_sizes/font_size = 22
 text = "Super Tic-Tac-Toe（超三目並べ）は、○☓ を交互に打っていき、大きい盤面で先に三目並べた方が勝ちのゲームです。
 "
-autowrap_mode = 2
+autowrap_mode = 3
+text_overrun_behavior = 1
 
 [node name="HBC" type="HBoxContainer" parent="."]
 offset_left = 10.0

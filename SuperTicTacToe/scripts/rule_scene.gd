@@ -6,10 +6,10 @@ var pict = []
 var page_buttons = []
 
 var rule_text = [
-	"Super Tic-Tac-Toe (超三目並べ) は, 小さい盤面 (ローカルボード) に ○, ☓ を交互に打っていき, 大きい盤面 (グローバルボード) で先に三目並びを作った方が勝ちのゲームです。",
-	"ローカルボードで ○ (☓) 三目並びを作ると, グローバルボードの対応するセルに大きい ○ (☓) が置かれます。",
+	"Super Tic-Tac-Toe (超三目並べ) は, 小さい盤面 (ローカルボード) に Ｏ, Ｘ を交互に打っていき, 大きい盤面 (グローバルボード) で先に三目並びを作った方が勝ちのゲームです。",
+	"ローカルボードで Ｏ (Ｘ) 三目並びを作ると, グローバルボードの対応するセルに大きい Ｏ (Ｘ) が置かれます。",
 	"ローカルボード内に打った箇所により, 次に着手可能なローカルボード (背景が白) が決まります。\n" +
-	"上図ではd1はローカルボード内の左上なので、左上のローカルボードに着手可能になります。",
+	"上図ではd1はローカルボード内の左上なので、\n左上のローカルボードに着手可能になります。",
 	"ただし, 次がすでに三目並んでいる, または空きが無い場合は, 全ての箇所に打つことが可能です。",
 ]
 var rule_text_en = [
@@ -17,7 +17,7 @@ var rule_text_en = [
 	"Super Tic-Tac-Toe is a two-player game played on a 9x9 grid. Each player takes turns placing an X or an O in a small board (local board). The first player to get three of their marks in a row, column, or diagonal on global board wins the game. ",
 	"When you make a line of O (X) thirds on the local board, a large O (X) is placed in the corresponding cell of the global board.",
 	"Depending on where you place it in the local board, the next available local board (with a white background) is determined.\n" +
-	"In the above figure, d1 is the top left of the local board, so it is possible to start on the top left local board.",
+	"In the above figure, d1 is the top left of the local board, so it is possible to start on the top left local board.\n",
 	"However, if the next one is already in a row or there are no vacancies, it is possible to place anywhere.",
 ]
 

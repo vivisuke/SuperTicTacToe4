@@ -13,3 +13,7 @@ android/
 html/
 web/
 windows/
+
+
+*.apk
+apk/
