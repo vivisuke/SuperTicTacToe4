@@ -139,6 +139,22 @@ text = "Start Game
 "
 icon = ExtResource("3_h6act")
 
+[node name="PlayTextureRect" type="TextureRect" parent="StartStopButton"]
+layout_mode = 0
+offset_left = -272.0
+offset_top = -65.0
+offset_right = -232.0
+offset_bottom = -25.0
+texture = ExtResource("3_h6act")
+
+[node name="StopTextureRect" type="TextureRect" parent="StartStopButton"]
+layout_mode = 0
+offset_left = -272.0
+offset_top = -15.0
+offset_right = -232.0
+offset_bottom = 25.0
+texture = ExtResource("34_mvoww")
+
 [node name="InitButton" type="Button" parent="."]
 anchors_preset = -1
 anchor_left = 0.058
@@ -459,19 +475,6 @@ stream = ExtResource("30_w5sgk")
 [node name="Kirakira" type="AudioStreamPlayer2D" parent="Audio"]
 position = Vector2(250, 450)
 stream = ExtResource("31_7ma7b")
-
-[node name="PlayTextureRect" type="TextureRect" parent="."]
-offset_left = -102.0
-offset_right = -62.0
-offset_bottom = 40.0
-texture = ExtResource("3_h6act")
-
-[node name="StopTextureRect" type="TextureRect" parent="."]
-offset_left = -102.0
-offset_top = 50.0
-offset_right = -62.0
-offset_bottom = 90.0
-texture = ExtResource("34_mvoww")
 
 [connection signal="pressed" from="StartStopButton" to="." method="_on_start_stop_button_pressed"]
 [connection signal="pressed" from="InitButton" to="." method="_on_init_button_pressed"]

@@ -144,6 +144,12 @@
 0141 ◎ C 08/17 08/21 0.006│問題│ルール文言：右端で改行しない場合がある
 									対処：text overrun behavior: trim charactors
 0142 ● C 08/21            │ToDo│着手時アニメーション
-0143 ● C 08/21            │ToDo│
-0144 ● C 08/21            │ToDo│
-0145 ● C 08/21            │ToDo│
+0143 ● C 10/10            │ToDo│人間が勝利した場合：紙吹雪
+0144 ◯ C 10/10            │ToDo│下部コマンドボタン間 ColorRect を無くす
+									結果：4.0 では無理
+0145 ● C 10/10            │ToDo│Play/StopTextureRect は PlayStopButton 子ノードに移動
+0146 ◎ C 10/21 10/21 0.007│ToDo│Undo：終局時はディセーブル
+0147 ● C 10/21            │ToDo│
+0148 ● C 10/21            │ToDo│
+0149 ● C 10/21            │ToDo│
+0150 ● C 10/21            │ToDo│

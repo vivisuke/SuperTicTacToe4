@@ -91,13 +91,14 @@ func init_board():
 func on_game_over():
 	print("on_game_over()")
 	game_started = false
+	$HBC/UndoButton.disabled = true
 	$HBC/RuleButton.disabled = game_started
 	$WhitePlayer/OptionButton.disabled = false
 	$BlackPlayer/OptionButton.disabled = false
 	$InitButton.disabled = false
 	$StartStopButton.disabled = true
 	$StartStopButton.text = "Cont. Game"
-	$StartStopButton.icon = $PlayTextureRect.texture
+	$StartStopButton.icon = $StartStopButton/PlayTextureRect.texture
 	update_board_tilemaps()
 	$CanvasLayer/ColorRect.show()
 	shock_wave_timer = 0.0      # start shock wave
@@ -217,8 +218,8 @@ func _process(delta):
 		print("AI put ", pos)
 		#
 		##var obj = $WhitePlayer/TextureRect if g.bd.next_color() == WHITE else $BlackPlayer/TextureRect
-		var dst = Vector2(pos[0]*CELL_WIDTH, pos[1]*CELL_WIDTH) + BOARD_ORG
-		print(dst)
+		##var dst = Vector2(pos[0]*CELL_WIDTH, pos[1]*CELL_WIDTH) + BOARD_ORG
+		##print(dst)
 		##var tw = get_tree().create_tween()
 		##tw.tween_property(obj, "position", dst, 0.5)
 		#
@@ -290,7 +291,7 @@ func _on_init_button_pressed():
 	$BlackPlayer/OptionButton.disabled = false
 	$StartStopButton.disabled = false
 	$StartStopButton.text = "Start Game"
-	$StartStopButton.icon = $PlayTextureRect.texture
+	$StartStopButton.icon = $StartStopButton/PlayTextureRect.texture
 	clear_eval_labels()
 	g.bd.init()
 	init_board()
@@ -304,7 +305,7 @@ func _on_start_stop_button_pressed():
 		$BlackPlayer/OptionButton.disabled = true
 		$InitButton.disabled = true
 		$StartStopButton.text = "Stop Game"
-		$StartStopButton.icon = $StopTextureRect.texture
+		$StartStopButton.icon = $StartStopButton/StopTextureRect.texture
 		clear_eval_labels()
 		if g.bd.is_game_over():
 			init_board()
@@ -315,7 +316,7 @@ func _on_start_stop_button_pressed():
 			$BlackPlayer/OptionButton.disabled = false
 			$InitButton.disabled = false
 			$StartStopButton.text = "Cont. Game"
-			$StartStopButton.icon = $PlayTextureRect.texture
+			$StartStopButton.icon = $StartStopButton/PlayTextureRect.texture
 		#$MessLabel.text = ""
 		set_message(["", ""])
 	update_next_underline()
