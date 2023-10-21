@@ -7,6 +7,7 @@ const NEXT_LOCAL_BOARD = 0
 #const BATSU = 0
 const WAIT = 6*3
 const GVAL = 100
+const CELL_WIDTH = 81
 
 const g_pow_table = [	pow(3, 8), pow(3, 7), pow(3, 6),
 						pow(3, 5), pow(3, 4), pow(3, 3),
@@ -214,6 +215,13 @@ func _process(delta):
 					g.bd.select_alpha_beta(typ - AI_RANDOM))
 		#print("game_started = ", game_started)
 		print("AI put ", pos)
+		#
+		##var obj = $WhitePlayer/TextureRect if g.bd.next_color() == WHITE else $BlackPlayer/TextureRect
+		var dst = Vector2(pos[0]*CELL_WIDTH, pos[1]*CELL_WIDTH) + BOARD_ORG
+		print(dst)
+		##var tw = get_tree().create_tween()
+		##tw.tween_property(obj, "position", dst, 0.5)
+		#
 		put_and_post_proc(pos[0], pos[1], false)
 		waiting = WAIT
 		AI_thinking = false
