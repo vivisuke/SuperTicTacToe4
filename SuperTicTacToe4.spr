@@ -149,7 +149,7 @@
 									結果：4.0 では無理
 0145 ● C 10/10            │ToDo│Play/StopTextureRect は PlayStopButton 子ノードに移動
 0146 ◎ C 10/21 10/21 0.007│ToDo│Undo：終局時はディセーブル
-0147 ● C 10/21            │ToDo│
-0148 ● C 10/21            │ToDo│
-0149 ● C 10/21            │ToDo│
-0150 ● C 10/21            │ToDo│
+0147 ◎ C 10/30 10/30 0.008│ToDo│Godot ver 4.1 に
+0148 ◎ C 10/30 10/30 0.008│問題│終局後 back でクラッシュ
+0149 ● C 10/30            │ToDo│
+0150 ● C 10/30            │ToDo│

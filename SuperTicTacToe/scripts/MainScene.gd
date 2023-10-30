@@ -233,7 +233,7 @@ func _process(delta):
 		if g.bd.next_board() < 0:	# 全ローカルボードに着手可能
 			if g.bd.is_empty(print_eval_ix%9, print_eval_ix/9):
 				g.bd.put(print_eval_ix%9, print_eval_ix/9, g.bd.next_color())
-				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3)))
+				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
 				g.bd.undo_put()
 				g_eval_labels[print_eval_ix].text = "%d" % ev
 			print_eval_ix += 1
@@ -246,7 +246,7 @@ func _process(delta):
 			var v = print_eval_ix / 3
 			if g.bd.is_empty(x0 + h, y0 + v):
 				g.bd.put(x0 + h, y0 + v, g.bd.next_color())
-				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3)))
+				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
 				g.bd.undo_put()
 				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
 			print_eval_ix += 1
