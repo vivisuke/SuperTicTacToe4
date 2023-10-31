@@ -351,6 +351,7 @@ func _on_skip_prev_button_pressed():	# 初手まで戻る
 	update_nstone()
 	update_back_forward_buttons()
 	$StartStopButton.disabled = false
+	clear_eval_labels()
 	#update_eval_labels()
 func _on_backward_button_pressed():		# 戻る
 	if g.bd.m_stack.size() < 1: return
@@ -361,17 +362,20 @@ func _on_backward_button_pressed():		# 戻る
 	update_nstone()
 	update_back_forward_buttons()
 	#print("move_hist = ", move_hist)
+	clear_eval_labels()
 	#update_eval_labels()
 func _on_forward_button_pressed():		# 進める
 	if move_hist.size() <= g.bd.m_nput: return
 	#print("move_hist = ", move_hist)
 	var t = move_hist[g.bd.m_nput]
 	put_and_post_proc(t[0], t[1], true)
+	clear_eval_labels()
 	#update_eval_labels()
 func _on_skip_next_button_pressed():	# 最後まで進める
 	while move_hist.size() > g.bd.m_nput:
 		var t = move_hist[g.bd.m_nput]
 		put_and_post_proc(t[0], t[1], true)
+	clear_eval_labels()
 	#update_eval_labels()
 func clear_eval_labels():
 	for i in range(g_eval_labels.size()):
