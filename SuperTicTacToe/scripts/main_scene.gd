@@ -39,6 +39,8 @@ var game_started = false		# ゲーム中か？
 #var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
 var print_eval_ix = -1			# -1 for 非表示
+var mmev = 0					# min/max 値
+var mmix = -1					# min/max 箇所
 var move_hist = []				# 着手履歴
 #var g.bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
@@ -68,6 +70,7 @@ func _ready():
 	#$MessLabel.text = "【Start Game】を押してください。"
 	set_message(["【Start Game】を押してください。", "Press [Start Game]."])
 	$CanvasLayer/ColorRect.material.set("shader_param/size", 0)
+	unit_test()
 	pass
 func set_message(lst):
 	mess_lst = lst
@@ -178,7 +181,7 @@ func update_next_mess():
 		set_message(["Ｘ の手番です。", "The next turn is X."])
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g.bd.put(x, y, g.bd.next_color())
-	#g.bd.print()
+	g.bd.print()
 	if !replay:
 		move_hist.resize(g.bd.m_nput-1)
 		move_hist.push_back([x, y])
@@ -234,6 +237,7 @@ func _process(delta):
 			if g.bd.is_empty(print_eval_ix%9, print_eval_ix/9):
 				g.bd.put(print_eval_ix%9, print_eval_ix/9, g.bd.next_color())
 				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
+				update_mmevix(ev, print_eval_ix%9, print_eval_ix/9)
 				g.bd.undo_put()
 				g_eval_labels[print_eval_ix].text = "%d" % ev
 			print_eval_ix += 1
@@ -247,6 +251,7 @@ func _process(delta):
 			if g.bd.is_empty(x0 + h, y0 + v):
 				g.bd.put(x0 + h, y0 + v, g.bd.next_color())
 				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
+				update_mmevix(ev, x0 + h, y0 + v)
 				g.bd.undo_put()
 				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
 			print_eval_ix += 1
@@ -259,6 +264,12 @@ func _process(delta):
 			shock_wave_timer = -1.0
 			$CanvasLayer/ColorRect.hide()
 	pass
+func update_mmevix(ev, x, y):
+	var c = g.bd.next_color()
+	if (c == g.BLACK && ev < mmev || c == g.WHITE && ev > mmev):
+		mmev = ev
+		mmix = print_eval_ix
+		$Board/TileMapCursor.set_cell(0, Vector2i(x, y), 1, Vector2i(0, 0))
 
 func _input(event):
 	if !game_started: return
@@ -334,6 +345,11 @@ func _on_undo_button_pressed():
 func update_eval_labels():
 	#if $PrintEvalButton.pressed:
 		clear_eval_labels()
+		if g.bd.next_color() == g.BLACK:
+			mmev = -99999
+		else:
+			mmev = 99999
+		mmix = -1
 		print_eval_ix = 0
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
@@ -401,5 +417,6 @@ func _on_option_button_item_selected(index):
 	g.save_lang()
 	$MessLabel.text = mess_lst[g.lang]
 	pass # Replace with function body.
-
+func unit_test():
+	assert( g.bd.next_color() == g.BLACK )
 

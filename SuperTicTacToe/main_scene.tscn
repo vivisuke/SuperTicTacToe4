@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://ddnaldrnxjkkx"]
+[gd_scene load_steps=53 format=3 uid="uid://ddnaldrnxjkkx"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_kg602"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_l3eue"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://os2kymwxpo7f" path="res://images/close_black.png" id="6_x73yt"]
 [ext_resource type="Texture2D" uid="uid://bhfxc41nee0t4" path="res://images/big_circle_black.png" id="8_h36eu"]
 [ext_resource type="Texture2D" uid="uid://cb1fxs2wp5co0" path="res://images/big_close_black.png" id="9_ju4x0"]
+[ext_resource type="Texture2D" uid="uid://ddelkifjmjhx6" path="res://images/star_green.png" id="10_6456h"]
 [ext_resource type="Texture2D" uid="uid://bjhabljmvrar0" path="res://images/undo_black.png" id="10_kv7xa"]
 [ext_resource type="FontFile" uid="uid://cq7cdxw5emvam" path="res://fonts/FlopDesignFONT.otf" id="10_lku15"]
 [ext_resource type="Texture2D" uid="uid://dkfrewd5wfyl6" path="res://images/undo_white.png" id="11_uycg4"]
@@ -54,9 +55,15 @@ texture = ExtResource("4_li4sm")
 texture_region_size = Vector2i(51, 51)
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7bmbp"]
+texture = ExtResource("10_6456h")
+texture_region_size = Vector2i(51, 51)
+0:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_bni5m"]
 tile_size = Vector2i(51, 51)
 sources/0 = SubResource("TileSetAtlasSource_k710b")
+sources/1 = SubResource("TileSetAtlasSource_7bmbp")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aipxp"]
 texture = ExtResource("5_u0aoc")
@@ -224,7 +231,7 @@ position = Vector2(20, 20)
 tile_set = SubResource("TileSet_bni5m")
 cell_quadrant_size = 3
 format = 2
-layer_0/tile_data = PackedInt32Array(3, 0, 0)
+layer_0/tile_data = PackedInt32Array(3, 0, 0, 1, 1, 0)
 
 [node name="Grid" type="ColorRect" parent="Board"]
 layout_mode = 0

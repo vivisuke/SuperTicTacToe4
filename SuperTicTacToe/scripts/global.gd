@@ -14,7 +14,7 @@ const g_pow_table = [	pow(3, 8), pow(3, 7), pow(3, 6),
 						pow(3, 2), pow(3, 1), pow(3, 0), ]
 const mb_str = ["Ｘ", "・", "Ｏ"]
 enum {
-	BLACK = -1, EMPTY, WHITE,				#	盤面石値、WHITE for 先手
+	WHITE = -1, EMPTY, BLACK,				#	盤面石値、BLACK for 先手
 	#TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
 	TS_EMPTY = -1, TS_WHITE, TS_BLACK,		#	タイルセットID
 	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_2, AI_DEPTH_3, AI_DEPTH_4, AI_DEPTH_5, 
@@ -59,7 +59,7 @@ class Board:
 		m_nput = 0
 		m_is_game_over = false
 		m_winner = EMPTY
-		m_next_color = WHITE
+		m_next_color = BLACK
 		m_nput_local = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 		m_three_lined_up = [false, false, false, false, false, false, false, false, false]
 		m_bd_index = [0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -109,11 +109,11 @@ class Board:
 		txt += "%d\n" % m_gbd_index
 		#
 		if m_is_game_over:
-			if m_winner == WHITE: txt += "O won.\n"
-			elif m_winner == BLACK: txt += "X won.\n"
+			if m_winner == BLACK: txt += "O won.\n"
+			elif m_winner == WHITE: txt += "X won.\n"
 			else: txt += "draw.\n"
 		else:
-			txt += "next turn color: %s\n" % ("O" if m_next_color == WHITE else "X")
+			txt += "next turn color: %s\n" % ("O" if m_next_color == BLACK else "X")
 			txt += "next board = %d\n" % m_next_board
 		txt += "last_put_pos = [%d, %d]\n" % last_put_pos()
 		txt += "eval = %d\n" % eval_board_index()
@@ -172,13 +172,13 @@ class Board:
 		var ix = gx + gy*3
 		var mx = x % 3;
 		var my = y % 3;
-		m_bd_index[ix] += g_pow_table[mx+my*3] * (1 if col==WHITE else 2);	#	盤面インデックス更新
+		m_bd_index[ix] += g_pow_table[mx+my*3] * (1 if col==BLACK else 2);	#	盤面インデックス更新
 		m_nput_local[ix] += 1		# 各ローカルボードの着手数
 		#var linedup = false			# ローカルボード内で三目ならんだか？
 		if !m_three_lined_up[ix] && is_three_stones(x, y):	# 三目並んだ→グローバルボード更新
 			m_linedup = true
 			m_gboard[ix] = col
-			m_gbd_index += g_pow_table[ix] * (1 if col==WHITE else 2);	#	盤面インデックス更新
+			m_gbd_index += g_pow_table[ix] * (1 if col==BLACK else 2);	#	盤面インデックス更新
 			m_three_lined_up[ix] = true
 			if is_three_stones_global(gx, gy):
 				m_is_game_over = true
@@ -200,10 +200,10 @@ class Board:
 		m_nput_local[ix] -= 1
 		var mx = itm.m_x % 3;
 		var my = itm.m_y % 3;
-		m_bd_index[ix] -= g_pow_table[mx+my*3] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
+		m_bd_index[ix] -= g_pow_table[mx+my*3] * (1 if m_next_color==BLACK else 2);	#	盤面インデックス更新
 		if itm.m_linedup:				# 着手で三目並んだ場合
 			m_gboard[gx + gy*3] = EMPTY
-			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==WHITE else 2);	#	盤面インデックス更新
+			m_gbd_index -= g_pow_table[ix] * (1 if m_next_color==BLACK else 2);	#	盤面インデックス更新
 			m_three_lined_up[ix] = false
 			m_is_game_over = false
 			m_winner = EMPTY
@@ -267,7 +267,7 @@ class Board:
 					put(x0+h, y0+v, m_next_color)
 					var ev = alpha_beta(alpha, beta, depth-D, ply+1) #*0.9999
 					undo_put()
-					if m_next_color == WHITE:
+					if m_next_color == BLACK:
 						alpha = max(ev, alpha)
 						if alpha >= beta:
 							#print("*** beta cut, alpha = ", alpha)
@@ -278,7 +278,7 @@ class Board:
 							#print("*** alpha cut, beta = ", beta)
 							return beta
 		#print("alpha = ", alpha, ", beta = ", beta)
-		if m_next_color == WHITE:
+		if m_next_color == BLACK:
 			#print("alpha = ", alpha)
 			return alpha
 		else:
@@ -318,7 +318,7 @@ class Board:
 					put(x0+h, y0+v, m_next_color)
 					var ev = alpha_beta(alpha, beta, DEPTH-D, 0) #*0.9999
 					undo_put()
-					if m_next_color == WHITE:
+					if m_next_color == BLACK:
 						if ev > alpha:
 							alpha = ev
 							ps = [x0+h, y0+v]
@@ -335,7 +335,7 @@ class Board:
 		if !lst.is_empty():
 			ps = lst[m_rng.randi_range(0, lst.size()-1)]
 		print("m_eval_count = ", m_eval_count)
-		print("eval = ", (alpha if m_next_color == WHITE else beta))
+		print("eval = ", (alpha if m_next_color == BLACK else beta))
 		print("winner = ", m_winner)
 		return ps
 
@@ -369,14 +369,14 @@ func _ready():
 
 func eval3(c1, c2, c3):		# 石の値は 0 for 空欄、±1 for 白・黒 と仮定
 	var sum = c1 + c2 + c3;
-	if( sum == WHITE * 3 ): return LINED3;
-	if( sum == BLACK * 3 ): return -LINED3;
-	if( sum == WHITE * 2 ): return LINED2;
-	if( sum == BLACK * 2 ): return -LINED2;
+	if( sum == BLACK * 3 ): return LINED3;
+	if( sum == WHITE * 3 ): return -LINED3;
+	if( sum == BLACK * 2 ): return LINED2;
+	if( sum == WHITE * 2 ): return -LINED2;
 	var n = c1*c1 + c2*c2 + c3*c3;		#	置かれた石数
 	if( n == 1 ):
-		if( sum == WHITE ): return LINED1;
-		if( sum == BLACK ): return -LINED1;
+		if( sum == BLACK ): return LINED1;
+		if( sum == WHITE ): return -LINED1;
 	return 0;
 	pass
 func eval3x3(board : Array):
@@ -393,8 +393,8 @@ func set_board3x3(index : int):
 	while i >= 0:
 		match index % 3:
 			0:	g_board3x3[i] = EMPTY
-			1:	g_board3x3[i] = WHITE
-			2:	g_board3x3[i] = BLACK
+			1:	g_board3x3[i] = BLACK
+			2:	g_board3x3[i] = WHITE
 		index /= 3
 		i -= 1
 func build_3x3_eval_table():
