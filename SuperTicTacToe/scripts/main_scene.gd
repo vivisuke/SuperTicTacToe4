@@ -81,8 +81,10 @@ func build_eval_labels():
 		for x in range(N_HORZ):
 			var lbl = Label.new()
 			lbl.text = ""
-			lbl.position = Vector2(x*51+25, y*51+35)
+			lbl.position = Vector2(x*51-15, y*51+35)
+			lbl.size.x = CELL_WIDTH
 			lbl.modulate = Color(1, 0, 0) # 赤色
+			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 			$Board.add_child(lbl)
 			g_eval_labels.push_back(lbl)
 func init_board():
