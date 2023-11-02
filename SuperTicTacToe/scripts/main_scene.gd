@@ -40,7 +40,8 @@ var game_started = false		# ゲーム中か？
 var pressedPos = Vector2(0, 0)
 var print_eval_ix = -1			# -1 for 非表示
 var mmev = 0					# min/max 値
-var mmix = -1					# min/max 箇所
+#var mmix = -1					# min/max 箇所
+var mmixlst = []				# min/max 箇所リスト
 var move_hist = []				# 着手履歴
 #var g.bd			# 盤面オブジェクト
 var g_board3x3 = []			# 3x3 盤面 for 作業用
@@ -266,9 +267,16 @@ func _process(delta):
 	pass
 func update_mmevix(ev, x, y):
 	var c = g.bd.next_color()
-	if (c == g.BLACK && ev < mmev || c == g.WHITE && ev > mmev):
-		mmev = ev
-		mmix = print_eval_ix
+	if (c == g.BLACK && ev <= mmev || c == g.WHITE && ev >= mmev):
+		if ev != mmev:
+			for i in range(mmixlst.size()):
+				var h = mmixlst[i][0]
+				var v = mmixlst[i][1]
+				$Board/TileMapCursor.set_cell(0, Vector2i(h, v), -1, Vector2i(0, 0))
+			mmixlst = []
+			mmev = ev
+			#mmix = print_eval_ix
+		mmixlst.push_back([x, y])
 		$Board/TileMapCursor.set_cell(0, Vector2i(x, y), 1, Vector2i(0, 0))
 
 func _input(event):
@@ -349,7 +357,8 @@ func update_eval_labels():
 			mmev = -99999
 		else:
 			mmev = 99999
-		mmix = -1
+		#mmix = -1
+		mmixlst = []
 		print_eval_ix = 0
 func update_back_forward_buttons():
 	print("update_back_forward_buttons()")
