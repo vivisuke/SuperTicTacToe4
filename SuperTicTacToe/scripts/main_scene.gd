@@ -35,6 +35,7 @@ var rng = RandomNumberGenerator.new()
 var AI_thinking = false
 var waiting = 0;				# ウェイト中カウンタ
 var game_started = false		# ゲーム中か？
+var anlz_mode = false			# 検討モード
 #var white_player = HUMAN
 #var black_player = HUMAN
 var pressedPos = Vector2(0, 0)
@@ -96,7 +97,6 @@ func init_board():
 	set_message(["【Start Game】を押してください。", "Press [Start Game]."])
 func on_game_over():
 	print("on_game_over()")
-	game_started = false
 	$HBC/UndoButton.disabled = true
 	$HBC/RuleButton.disabled = game_started
 	$WhitePlayer/OptionButton.disabled = false
@@ -107,10 +107,16 @@ func on_game_over():
 	$StartStopButton.icon = $StartStopButton/PlayTextureRect.texture
 	update_board_tilemaps()
 	$CanvasLayer/ColorRect.show()
-	shock_wave_timer = 0.0      # start shock wave
+	if game_started:				# ゲーム中だった場合
+		shock_wave_timer = 0.0      # start shock wave
+		$Audio/Kirakira.play()
+		game_started = false
+		update_back_forward_buttons()
 func update_next_underline():
-	$WhitePlayer/Underline.visible = game_started && g.bd.next_color() == WHITE
-	$BlackPlayer/Underline.visible = game_started && g.bd.next_color() == BLACK
+	#$WhitePlayer/Underline.visible = game_started && g.bd.next_color() == WHITE
+	#$BlackPlayer/Underline.visible = game_started && g.bd.next_color() == BLACK
+	$WhitePlayer/Underline.visible = g.bd.next_color() == WHITE
+	$BlackPlayer/Underline.visible = g.bd.next_color() == BLACK
 func update_nstone():
 	$NStoneLabel.text = "#%d (spc: %d)" % [g.bd.m_nput+1, 81-g.bd.m_nput]
 func col2tsid(col):
@@ -189,8 +195,8 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 		move_hist.resize(g.bd.m_nput-1)
 		move_hist.push_back([x, y])
 	if g.bd.is_game_over():
-		$Audio/Kirakira.play()
-		game_started = false
+		#$Audio/Kirakira.play()
+		#game_started = false
 		$HBC/RuleButton.disabled = game_started
 		var lst
 		match g.bd.winner():
@@ -205,7 +211,7 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 	update_next_underline()
 	update_board_tilemaps()
 	update_nstone()
-	update_back_forward_buttons()
+	#update_back_forward_buttons()
 func _process(delta):
 	if waiting > 0:
 		waiting -= 1
@@ -232,7 +238,7 @@ func _process(delta):
 		put_and_post_proc(pos[0], pos[1], false)
 		waiting = WAIT
 		AI_thinking = false
-		if g.bd.is_game_over():
+		if g.bd.is_game_over():		# AI 着手により終局した場合
 			on_game_over()
 	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
 		# 空欄に評価値を表示
@@ -302,7 +308,7 @@ func _input(event):
 			var gy = int(pos.y) / 3
 			if !can_put_local(gx, gy): return
 			put_and_post_proc(pos.x, pos.y, false)
-			if g.bd.is_game_over():
+			if g.bd.is_game_over():		# 人間着手により終局した場合
 				on_game_over()
 			waiting = WAIT
 	pass
