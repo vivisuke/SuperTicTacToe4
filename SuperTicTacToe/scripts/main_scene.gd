@@ -374,6 +374,8 @@ func update_back_forward_buttons():
 	$HBC/BackwardButton.disabled = game_started || g.bd.m_stack.is_empty()
 	$HBC/ForwardButton.disabled = game_started || move_hist.size() <= g.bd.m_nput
 	$HBC/SkipNextButton.disabled = game_started || move_hist.size() <= g.bd.m_nput
+	#print("move_hist.size() = ", move_hist.size())
+	#print("g.bd.m_nput = ", g.bd.m_nput)
 	$StartStopButton.disabled = false
 func _on_skip_prev_button_pressed():	# 初手まで戻る
 	while !g.bd.m_stack.is_empty():
@@ -403,12 +405,14 @@ func _on_forward_button_pressed():		# 進める
 	var t = move_hist[g.bd.m_nput]
 	put_and_post_proc(t[0], t[1], true)
 	clear_eval_labels()
+	update_back_forward_buttons()
 	#update_eval_labels()
 func _on_skip_next_button_pressed():	# 最後まで進める
 	while move_hist.size() > g.bd.m_nput:
 		var t = move_hist[g.bd.m_nput]
 		put_and_post_proc(t[0], t[1], true)
 	clear_eval_labels()
+	update_back_forward_buttons()
 	#update_eval_labels()
 func clear_eval_labels():
 	for i in range(g_eval_labels.size()):
