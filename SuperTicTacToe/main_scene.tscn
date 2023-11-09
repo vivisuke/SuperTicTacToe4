@@ -276,7 +276,7 @@ offset_left = 40.0
 offset_right = 220.0
 offset_bottom = 40.0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
-item_count = 7
+item_count = 8
 selected = 0
 popup/item_0/text = "Human"
 popup/item_0/id = 0
@@ -292,6 +292,8 @@ popup/item_5/text = "AI Depth 4"
 popup/item_5/id = 5
 popup/item_6/text = "AI Depth 5"
 popup/item_6/id = 6
+popup/item_7/text = "AI pure MC"
+popup/item_7/id = 7
 
 [node name="TextureRect" type="TextureRect" parent="WhitePlayer"]
 layout_mode = 0
@@ -319,7 +321,7 @@ offset_left = 40.0
 offset_right = 220.0
 offset_bottom = 40.0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
-item_count = 7
+item_count = 8
 selected = 0
 popup/item_0/text = "Human"
 popup/item_0/id = 0
@@ -335,6 +337,8 @@ popup/item_5/text = "AI Depth 4"
 popup/item_5/id = 5
 popup/item_6/text = "AI Depth 5"
 popup/item_6/id = 6
+popup/item_7/text = "AI pure MC"
+popup/item_7/id = 7
 
 [node name="TextureRect" type="TextureRect" parent="BlackPlayer"]
 layout_mode = 0

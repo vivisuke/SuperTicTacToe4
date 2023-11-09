@@ -18,6 +18,7 @@ enum {
 	#TS_EMPTY = -1, TS_BATSU, TS_MARU,		#	タイルセットID
 	TS_EMPTY = -1, TS_WHITE, TS_BLACK,		#	タイルセットID
 	HUMAN = 0, AI_RANDOM, AI_DEPTH_1, AI_DEPTH_2, AI_DEPTH_3, AI_DEPTH_4, AI_DEPTH_5, 
+	AI_PURE_MC,
 	JA = 0, EN,			# 日本語/英語
 }
 

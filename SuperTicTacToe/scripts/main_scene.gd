@@ -243,6 +243,7 @@ func _process(delta):
 		AI_thinking = true
 		thread = Thread.new()
 		thread.start(do_think_AI, 2)
+		set_message(["AI 考慮中...", "AI is thinking..."])
 		AI_think_finished = false
 		#
 	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
