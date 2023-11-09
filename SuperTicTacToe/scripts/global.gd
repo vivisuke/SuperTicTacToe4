@@ -240,6 +240,8 @@ class Board:
 					if is_empty(x0+h, y0+v):
 						lst.push_back([x0+h, y0+v])
 			return lst[m_rng.randi_range(0, lst.size() - 1)]
+	func select_pure_MC():
+		pass
 	func alpha_beta(alpha, beta, depth, ply):
 		if depth <= 0 || is_game_over():
 			#return eval_board_index()

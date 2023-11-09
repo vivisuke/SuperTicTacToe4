@@ -32,7 +32,10 @@ var BOARD_ORG
 
 var g = Global
 var rng = RandomNumberGenerator.new()
+var thread : Thread
 var AI_thinking = false
+var AI_think_finished = false	# 探索終了
+var AI_put_pos					# AI 着手位置
 var waiting = 0;				# ウェイト中カウンタ
 var game_started = false		# ゲーム中か？
 var anlz_mode = false			# 検討モード
@@ -212,9 +215,25 @@ func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後
 	update_board_tilemaps()
 	update_nstone()
 	#update_back_forward_buttons()
+func do_think_AI():
+	#var pos = AI_think_random()
+	var typ = g.white_player if g.bd.next_color() == WHITE else g.black_player
+	AI_put_pos = (g.bd.select_random() if typ == AI_RANDOM else
+				g.bd.select_alpha_beta(typ - AI_RANDOM))
+	#print("game_started = ", game_started)
+	print("AI put ", AI_put_pos)
+	AI_think_finished = true				# マルチスレッド処理終了フラグON
+	pass
 func _process(delta):
 	if waiting > 0:
 		waiting -= 1
+	elif AI_think_finished:
+		AI_think_finished = false
+		put_and_post_proc(AI_put_pos[0], AI_put_pos[1], false)
+		waiting = WAIT
+		AI_thinking = false
+		if g.bd.is_game_over():		# AI 着手により終局した場合
+			on_game_over()
 	elif( game_started && !AI_thinking &&
 			(g.bd.next_color() == WHITE && g.white_player >= AI_RANDOM ||
 			g.bd.next_color() == BLACK && g.black_player >= AI_RANDOM) ):
@@ -222,24 +241,10 @@ func _process(delta):
 		#if !game_started:
 		#	print("??? game_started = ", game_started)
 		AI_thinking = true
-		#var pos = AI_think_random()
-		var typ = g.white_player if g.bd.next_color() == WHITE else g.black_player
-		var pos = (g.bd.select_random() if typ == AI_RANDOM else
-					g.bd.select_alpha_beta(typ - AI_RANDOM))
-		#print("game_started = ", game_started)
-		print("AI put ", pos)
+		thread = Thread.new()
+		thread.start(do_think_AI, 2)
+		AI_think_finished = false
 		#
-		##var obj = $WhitePlayer/TextureRect if g.bd.next_color() == WHITE else $BlackPlayer/TextureRect
-		##var dst = Vector2(pos[0]*CELL_WIDTH, pos[1]*CELL_WIDTH) + BOARD_ORG
-		##print(dst)
-		##var tw = get_tree().create_tween()
-		##tw.tween_property(obj, "position", dst, 0.5)
-		#
-		put_and_post_proc(pos[0], pos[1], false)
-		waiting = WAIT
-		AI_thinking = false
-		if g.bd.is_game_over():		# AI 着手により終局した場合
-			on_game_over()
 	elif print_eval_ix >= 0 && print_eval_ix < N_HORZ*N_VERT:
 		# 空欄に評価値を表示
 		if g.bd.next_board() < 0:	# 全ローカルボードに着手可能
