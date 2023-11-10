@@ -242,7 +242,7 @@ func _process(delta):
 		#	print("??? game_started = ", game_started)
 		AI_thinking = true
 		thread = Thread.new()
-		thread.start(do_think_AI, 2)
+		thread.start(do_think_AI, 2)	# PRIORITY_HIGH
 		set_message(["AI 考慮中...", "AI is thinking..."])
 		AI_think_finished = false
 		#
@@ -445,5 +445,7 @@ func _on_option_button_item_selected(index):
 	$MessLabel.text = mess_lst[g.lang]
 	pass # Replace with function body.
 func unit_test():
+	var win = g.bd.playout_random()
+	print("winner = ", win)
 	assert( g.bd.next_color() == g.BLACK )
 

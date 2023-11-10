@@ -35,7 +35,7 @@ class HistItem:
 class Board:
 	var m_nput = 0				# 総着手数
 	var m_is_game_over			# 終局状態か？
-	var m_winner				# 勝者
+	var m_winner				# 勝者（WHITE | EMPTY | BLACK)
 	var m_next_board = -1		# 着手可能ローカルボード [0, 9)、-1 for 全ローカルボードに着手可能
 	var m_next_color
 	var m_linedup = false		# 直前の着手でローカルボード内で三目並んだ
@@ -241,6 +241,18 @@ class Board:
 					if is_empty(x0+h, y0+v):
 						lst.push_back([x0+h, y0+v])
 			return lst[m_rng.randi_range(0, lst.size() - 1)]
+	func playout_random():
+		var depth = 0
+		while !is_game_over():
+			var pos = select_random()
+			put(pos[0], pos[1], next_color())
+			depth += 1
+		var winner = m_winner
+		self.print()
+		for i in range(depth):
+			undo_put()
+		self.print()
+		return winner			# WHITE | EMPTY | BLACK
 	func select_pure_MC():
 		pass
 	func alpha_beta(alpha, beta, depth, ply):
