@@ -445,7 +445,15 @@ func _on_option_button_item_selected(index):
 	$MessLabel.text = mess_lst[g.lang]
 	pass # Replace with function body.
 func unit_test():
+	assert( g.bd.next_color() == g.BLACK )
 	var win = g.bd.playout_random()
 	print("winner = ", win)
-	assert( g.bd.next_color() == g.BLACK )
+	var wr = g.bd.calc_win_rate(0, 0, 30)
+	print("win rate (0, 0) = ", wr)
+	wr = g.bd.calc_win_rate(0, 1, 30)
+	print("win rate (0, 1) = ", wr)
+	wr = g.bd.calc_win_rate(1, 1, 30)
+	print("win rate (1, 1) = ", wr)
+	wr = g.bd.calc_win_rate(4, 4, 30)
+	print("win rate (4, 4) = ", wr)
 

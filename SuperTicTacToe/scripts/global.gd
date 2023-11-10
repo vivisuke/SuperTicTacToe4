@@ -248,11 +248,25 @@ class Board:
 			put(pos[0], pos[1], next_color())
 			depth += 1
 		var winner = m_winner
-		self.print()
+		#self.print()
 		for i in range(depth):
 			undo_put()
-		self.print()
+		#self.print()
 		return winner			# WHITE | EMPTY | BLACK
+	func calc_win_rate(x, y, N) -> float:		# 次の手番の勝率を計算
+		var bwon = 0
+		var wwon = 0
+		put(x, y, next_color())
+		for i in range(N):
+			var won = playout_random()
+			if won != EMPTY:
+				if won == BLACK: bwon += 1
+				else: wwon += 1
+		undo_put()
+		if next_color() == BLACK:
+			return float(bwon) / (bwon + wwon)
+		else:
+			return float(wwon) / (bwon + wwon)
 	func select_pure_MC():
 		pass
 	func alpha_beta(alpha, beta, depth, ply):
