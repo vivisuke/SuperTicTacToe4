@@ -193,7 +193,8 @@ func update_next_mess():
 		set_message(["Ｘ の手番です。", "The next turn is X."])
 func put_and_post_proc(x: int, y: int, replay: bool):	# 着手処理とその後処理
 	g.bd.put(x, y, g.bd.next_color())
-	g.bd.print()
+	#g.bd.print()
+	clear_eval_labels()
 	if !replay:
 		move_hist.resize(g.bd.m_nput-1)
 		move_hist.push_back([x, y])
@@ -250,11 +251,17 @@ func _process(delta):
 		# 空欄に評価値を表示
 		if g.bd.next_board() < 0:	# 全ローカルボードに着手可能
 			if g.bd.is_empty(print_eval_ix%9, print_eval_ix/9):
-				g.bd.put(print_eval_ix%9, print_eval_ix/9, g.bd.next_color())
-				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
-				update_mmevix(ev, print_eval_ix%9, print_eval_ix/9)
-				g.bd.undo_put()
-				g_eval_labels[print_eval_ix].text = "%d" % ev
+				if true:
+					# Pure モンテカルロ
+					var ev = g.bd.calc_win_rate(print_eval_ix%9, print_eval_ix/9, 30)
+					update_mmevix_rate(ev, print_eval_ix%9, print_eval_ix/9)
+					g_eval_labels[print_eval_ix].text = "%.1f" % (ev*100)
+				else:
+					g.bd.put(print_eval_ix%9, print_eval_ix/9, g.bd.next_color())
+					var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
+					update_mmevix(ev, print_eval_ix%9, print_eval_ix/9)
+					g.bd.undo_put()
+					g_eval_labels[print_eval_ix].text = "%d" % ev
 			print_eval_ix += 1
 			if print_eval_ix >= N_HORZ*N_VERT:
 				print_eval_ix = -1
@@ -264,11 +271,17 @@ func _process(delta):
 			var h = print_eval_ix % 3
 			var v = print_eval_ix / 3
 			if g.bd.is_empty(x0 + h, y0 + v):
-				g.bd.put(x0 + h, y0 + v, g.bd.next_color())
-				var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
-				update_mmevix(ev, x0 + h, y0 + v)
-				g.bd.undo_put()
-				g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
+				if true:
+					# Pure モンテカルロ
+					var ev = g.bd.calc_win_rate(x0 + h, y0 + v, 100)
+					update_mmevix_rate(ev, x0 + h, y0 + v)
+					g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%.1f" % (ev*100)
+				else:
+					g.bd.put(x0 + h, y0 + v, g.bd.next_color())
+					var ev = min(9999, max(-9999, g.bd.alpha_beta(-2000, 2000, 3, 0)))
+					update_mmevix(ev, x0 + h, y0 + v)
+					g.bd.undo_put()
+					g_eval_labels[x0 + h + (y0 + v)*N_HORZ].text = "%d" % ev
 			print_eval_ix += 1
 			if print_eval_ix >= 9:
 				print_eval_ix = -1
@@ -282,6 +295,18 @@ func _process(delta):
 func update_mmevix(ev, x, y):
 	var c = g.bd.next_color()
 	if (c == g.BLACK && ev <= mmev || c == g.WHITE && ev >= mmev):
+		if ev != mmev:
+			for i in range(mmixlst.size()):
+				var h = mmixlst[i][0]
+				var v = mmixlst[i][1]
+				$Board/TileMapCursor.set_cell(0, Vector2i(h, v), -1, Vector2i(0, 0))
+			mmixlst = []
+			mmev = ev
+			#mmix = print_eval_ix
+		mmixlst.push_back([x, y])
+		$Board/TileMapCursor.set_cell(0, Vector2i(x, y), 1, Vector2i(0, 0))
+func update_mmevix_rate(ev, x, y):
+	if ev >= mmev:
 		if ev != mmev:
 			for i in range(mmixlst.size()):
 				var h = mmixlst[i][0]
