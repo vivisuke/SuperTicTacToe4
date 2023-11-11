@@ -263,6 +263,7 @@ class Board:
 				if won == BLACK: bwon += 1
 				else: wwon += 1
 		undo_put()
+		if bwon + wwon == 0: return 0.5			# すべて引き分け
 		if next_color() == BLACK:
 			return float(bwon) / (bwon + wwon)
 		else:
